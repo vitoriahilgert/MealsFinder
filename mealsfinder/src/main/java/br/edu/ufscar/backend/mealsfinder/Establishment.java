@@ -1,6 +1,5 @@
-package mealsfinder;
+package br.edu.ufscar.backend.mealsfinder;
 
-import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package mealsfinder;
+package br.edu.ufscar.backend.mealsfinder;
 
 enum EstablishmentTypeEnum {
     A,

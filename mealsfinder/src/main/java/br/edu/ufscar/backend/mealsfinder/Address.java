@@ -1,4 +1,4 @@
-package mealsfinder;
+package br.edu.ufscar.backend.mealsfinder;
 
 public class Address {
     private String CEP;

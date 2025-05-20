@@ -1,9 +1,9 @@
-package mealsfinder;
+package br.edu.ufscar.backend.mealsfinder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.time.LocalDateTime;
 
 public abstract class Content {
     private UUID id;

@@ -1,8 +1,8 @@
-package mealsfinder;
+package br.edu.ufscar.backend.mealsfinder;
 
-import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Client extends User {
     private List<FoodTypesEnum> likes;
