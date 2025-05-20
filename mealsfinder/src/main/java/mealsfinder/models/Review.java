@@ -8,7 +8,9 @@ public class Review extends Content {
     private float foodRating;
     private float serviceRating;
     private float establishmentRating;
-    
+
+    private float price;
+
     public Review() {
         super();
     }
@@ -52,6 +54,14 @@ public class Review extends Content {
         return establishmentRating;
     }
 
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
     public void setEstablishmentRating(Integer establishmentRating) {
         this.establishmentRating = validateRating(establishmentRating);
     }
@@ -89,6 +99,7 @@ public class Review extends Content {
                 ", establishment=" + establishmentId +
                 ", rating=" + getRatingAverage() + "/10" +
                 ", likes=" + getLikeCount() +
+                ", price=" + price +
                 '}';
     }
 }

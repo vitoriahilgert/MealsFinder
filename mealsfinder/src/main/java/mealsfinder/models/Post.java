@@ -1,5 +1,6 @@
 package mealsfinder.models;
 
+import mealsfinder.models.enums.EstablishmentTagsEnum;
 import mealsfinder.models.enums.FoodTypesEnum;
 
 import java.util.ArrayList;
@@ -7,20 +8,21 @@ import java.util.List;
 import java.util.UUID;
 public class Post extends Content {
     private List<String> pictureUrls;
-    private List<FoodTypesEnum> tags;
+    private List<FoodTypesEnum> foodTags;
+    private List<EstablishmentTagsEnum> establishmentTags;
     private List<UUID> commentIds;
     
     public Post() {
         super();
         this.pictureUrls = new ArrayList<>();
-        this.tags = new ArrayList<>();
+        this.foodTags = new ArrayList<>();
         this.commentIds = new ArrayList<>();
     }
     
     public Post(UUID creatorId, String text) {
         super(creatorId, text);
         this.pictureUrls = new ArrayList<>();
-        this.tags = new ArrayList<>();
+        this.foodTags = new ArrayList<>();
         this.commentIds = new ArrayList<>();
     }
 
@@ -42,22 +44,36 @@ public class Post extends Content {
         return pictureUrls.remove(pictureUrl);
     }
 
-    public List<FoodTypesEnum> getTags() {
-        return tags;
+    public List<FoodTypesEnum> getFoodTags() {
+        return foodTags;
     }
 
-    public void setTags(List<FoodTypesEnum> tags) {
-        this.tags = tags;
+    public void setFoodTags(List<FoodTypesEnum> tags) {
+        this.foodTags = tags;
     }
 
-    public void addTag(FoodTypesEnum tag) {
-        if (tag != null && !tags.isEmpty() && !tags.contains(tag)) {
-            tags.add(tag);
+    public void addFoodTag(FoodTypesEnum tag) {
+        if (tag != null && !foodTags.isEmpty() && !foodTags.contains(tag)) {
+            foodTags.add(tag);
+        }
+    }
+
+    public List<EstablishmentTagsEnum> getEstablishmentTags() {
+        return establishmentTags;
+    }
+
+    public void setEstablishmentTags(List<EstablishmentTagsEnum> tags) {
+        this.establishmentTags = tags;
+    }
+
+    public void addEstablishmentTag(EstablishmentTagsEnum tag) {
+        if (tag != null && !establishmentTags.isEmpty() && !establishmentTags.contains(tag)) {
+            establishmentTags.add(tag);
         }
     }
 
     public boolean removeTag(FoodTypesEnum tag) {
-        return tags.remove(tag);
+        return foodTags.remove(tag);
     }
 
     public List<UUID> getCommentIds() {
@@ -93,7 +109,8 @@ public class Post extends Content {
                 "id=" + getId() +
                 ", creator=" + getCreatorId() +
                 ", pictures=" + pictureUrls.size() +
-                ", tags=" + tags +
+                ", foodTags=" + foodTags +
+                ", establishmentTags=" + establishmentTags +
                 ", comments=" + getCommentCount() +
                 ", likes=" + getLikeCount() +
                 '}';
