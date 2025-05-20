@@ -1,4 +1,4 @@
-package mealsfinder;
+package br.edu.ufscar.backend.mealsfinder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
