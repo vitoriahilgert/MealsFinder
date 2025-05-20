@@ -23,11 +23,6 @@ public class Post extends Content {
         this.commentIds = new ArrayList<>();
     }
 
-    public Post(UUID creatorId, String text, UUID establishmentId) {
-        this(creatorId, text);
-        this.establishmentId = establishmentId;
-    }
-
     public List<String> getPictureUrls() {
         return pictureUrls;
     }
@@ -55,7 +50,7 @@ public class Post extends Content {
     }
 
     public void addTag(FoodTypesEnum tag) {
-        if (tag != null && !tag.isEmpty() && !tags.contains(tag)) {
+        if (tag != null && !tags.isEmpty() && !tags.contains(tag)) {
             tags.add(tag);
         }
     }
@@ -96,7 +91,6 @@ public class Post extends Content {
         return "Post{" +
                 "id=" + getId() +
                 ", creator=" + getCreatorId() +
-                ", establishment=" + (establishmentId != null ? establishmentId : "none") +
                 ", pictures=" + pictureUrls.size() +
                 ", tags=" + tags +
                 ", comments=" + getCommentCount() +

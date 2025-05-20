@@ -1,9 +1,5 @@
 package mealsfinder;
 
-import java.util.UUID;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Address {
     private String CEP;
     private String city;
@@ -11,6 +7,7 @@ public class Address {
     private String street;
     private String number;
     private String neighborhood;
+    private String country;
 
     private String formattedAddress;
     private String placeId; // Google Maps
@@ -91,22 +88,6 @@ public class Address {
         updateFormattedAddress();
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
     public String getFormattedAddress() {
         return formattedAddress;
     }
@@ -132,8 +113,8 @@ public class Address {
         }
         
         // Add number
-        if (unit != null && !unit.isEmpty()) {
-            sb.append(", ").append(unit);
+        if (number != null && !number.isEmpty()) {
+            sb.append(", ").append(number);
         }
         
         // Add neighborhood
