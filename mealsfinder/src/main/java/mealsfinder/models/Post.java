@@ -1,9 +1,10 @@
-package mealsfinder;
+package mealsfinder.models;
+
+import mealsfinder.models.enums.FoodTypesEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 public class Post extends Content {
     private List<String> pictureUrls;
     private List<FoodTypesEnum> tags;

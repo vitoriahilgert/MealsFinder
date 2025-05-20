@@ -1,4 +1,6 @@
-package mealsfinder;
+package mealsfinder.models;
+
+import mealsfinder.models.enums.FoodTypesEnum;
 
 import java.util.UUID;
 import java.util.ArrayList;

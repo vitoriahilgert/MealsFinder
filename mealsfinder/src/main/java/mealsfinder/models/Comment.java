@@ -1,4 +1,4 @@
-package mealsfinder;
+package mealsfinder.models;
 
 import java.util.ArrayList;
 import java.util.List;

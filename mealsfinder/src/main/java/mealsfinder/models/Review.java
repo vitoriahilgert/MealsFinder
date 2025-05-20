@@ -1,7 +1,6 @@
-package mealsfinder;
+package mealsfinder.models;
 
 import java.util.UUID;
-
 public class Review extends Content {
     private UUID establishmentId;
     

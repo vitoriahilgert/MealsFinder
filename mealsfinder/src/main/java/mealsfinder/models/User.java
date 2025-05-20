@@ -1,4 +1,4 @@
-package mealsfinder;
+package mealsfinder.models;
 
 import java.util.UUID;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ public abstract class User {
     private String email;
     private String phoneNumber;
     private String username;
-    private String password;    // Todo: criptografar
+    private String password; // TODO: criptografar
     private String profilePicUrl;
     private boolean isAccountConfirmed;
     private String confirmationCode;

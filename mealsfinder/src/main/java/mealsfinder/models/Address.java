@@ -1,4 +1,4 @@
-package mealsfinder;
+package mealsfinder.models;
 
 public class Address {
     private String CEP;
