@@ -1,4 +1,4 @@
-package br.edu.ufscar.backend.mealsfinder;
+package br.edu.ufscar.backend.mealsfinder.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

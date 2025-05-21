@@ -1,4 +1,4 @@
-package br.edu.ufscar.backend.mealsfinder;
+package br.edu.ufscar.backend.mealsfinder.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,8 @@ public abstract class User {
     private String confirmationCode;
     private String bio;
     private List<UUID> followers;
+
+
 
     public User() {
         this.id = UUID.randomUUID();
