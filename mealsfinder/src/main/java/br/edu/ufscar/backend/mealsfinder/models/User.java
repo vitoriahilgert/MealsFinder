@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-abstract class User {
+public abstract class User {
     private UUID id;
     private String email;
     private String phoneNumber;
     private String username;
-    private String password;    // Todo: criptografar
+    private String password;
     private String profilePicUrl;
     private boolean isAccountConfirmed;
     private String confirmationCode;
