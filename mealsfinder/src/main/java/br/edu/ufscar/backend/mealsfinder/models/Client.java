@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Client extends User {
+class Client extends User {
     private List<FoodTypesEnum> likes;
     private List<FoodTypesEnum> dislikes;
     private List<User> following;

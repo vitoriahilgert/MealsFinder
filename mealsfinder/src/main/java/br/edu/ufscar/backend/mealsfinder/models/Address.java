@@ -1,6 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-public class Address {
+class Address {
     private String CEP;
     private String city;
     private String state;

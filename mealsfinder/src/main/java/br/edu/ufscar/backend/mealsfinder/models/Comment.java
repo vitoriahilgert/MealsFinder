@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Comment extends Content {
+class Comment extends Content {
     private UUID postId;
     private UUID parentCommentId;
     private List<UUID> childCommentIds;
