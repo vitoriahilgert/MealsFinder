@@ -1,14 +1,15 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypeEnum;
+import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 class Establishment extends User {
     private String cnpj;
-    private EstablishmentTypeEnum type;
+    private EstablishmentTypesEnum type;
     private boolean isDelivery;
     private boolean isInPerson;
     private StatusEnum status;
@@ -18,22 +19,31 @@ class Establishment extends User {
     private int rejections;
 
     public Establishment() {
-        super();
-        this.menuUrls = new ArrayList<>();
-        this.establishmentPicturesUrls = new ArrayList<>();
-        this.status = StatusEnum.PENDING_APPROVAL;
-        this.rejections = 0;
     }
 
-    public Establishment(String email, String phoneNumber, String username, String password, 
-                        String cnpj, EstablishmentTypeEnum type) {
-        super(email, phoneNumber, username, password);
+    public Establishment(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, List<UUID> followers, String cnpj, EstablishmentTypesEnum type, boolean isDelivery, boolean isInPerson, StatusEnum status, Address address, List<String> menuUrls, List<String> establishmentPicturesUrls, int rejections) {
+        super(id, email, phoneNumber, username, password, profilePicUrl, isAccountConfirmed, confirmationCode, bio, followers);
         this.cnpj = cnpj;
         this.type = type;
-        this.menuUrls = new ArrayList<>();
-        this.establishmentPicturesUrls = new ArrayList<>();
-        this.status = StatusEnum.PENDING_APPROVAL;
-        this.rejections = 0;
+        this.isDelivery = isDelivery;
+        this.isInPerson = isInPerson;
+        this.status = status;
+        this.address = address;
+        this.menuUrls = menuUrls;
+        this.establishmentPicturesUrls = establishmentPicturesUrls;
+        this.rejections = rejections;
+    }
+
+    public Establishment(String cnpj, EstablishmentTypesEnum type, boolean isDelivery, boolean isInPerson, StatusEnum status, Address address, List<String> menuUrls, List<String> establishmentPicturesUrls, int rejections) {
+        this.cnpj = cnpj;
+        this.type = type;
+        this.isDelivery = isDelivery;
+        this.isInPerson = isInPerson;
+        this.status = status;
+        this.address = address;
+        this.menuUrls = menuUrls;
+        this.establishmentPicturesUrls = establishmentPicturesUrls;
+        this.rejections = rejections;
     }
 
     public String getCnpj() {
@@ -44,11 +54,11 @@ class Establishment extends User {
         this.cnpj = cnpj;
     }
 
-    public EstablishmentTypeEnum getType() {
+    public EstablishmentTypesEnum getType() {
         return type;
     }
 
-    public void setType(EstablishmentTypeEnum type) {
+    public void setType(EstablishmentTypesEnum type) {
         this.type = type;
     }
 
@@ -76,22 +86,20 @@ class Establishment extends User {
         this.status = status;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public List<String> getMenuUrls() {
         return menuUrls;
     }
 
     public void setMenuUrls(List<String> menuUrls) {
         this.menuUrls = menuUrls;
-    }
-    
-    public void addMenuUrl(String url) {
-        if (!menuUrls.contains(url)) {
-            menuUrls.add(url);
-        }
-    }
-    
-    public void removeMenuUrl(String url) {
-        menuUrls.remove(url);
     }
 
     public List<String> getEstablishmentPicturesUrls() {
@@ -101,16 +109,6 @@ class Establishment extends User {
     public void setEstablishmentPicturesUrls(List<String> establishmentPicturesUrls) {
         this.establishmentPicturesUrls = establishmentPicturesUrls;
     }
-    
-    public void addPictureUrl(String url) {
-        if (!establishmentPicturesUrls.contains(url)) {
-            establishmentPicturesUrls.add(url);
-        }
-    }
-    
-    public void removePictureUrl(String url) {
-        establishmentPicturesUrls.remove(url);
-    }
 
     public int getRejections() {
         return rejections;
@@ -118,6 +116,18 @@ class Establishment extends User {
 
     public void setRejections(int rejections) {
         this.rejections = rejections;
+    }
+
+    public void addMenuUrl(String url) {
+        if (!menuUrls.contains(url)) {
+            menuUrls.add(url);
+        }
+    }
+    
+    public void addPictureUrl(String url) {
+        if (!establishmentPicturesUrls.contains(url)) {
+            establishmentPicturesUrls.add(url);
+        }
     }
     
     public void incrementRejections() {
