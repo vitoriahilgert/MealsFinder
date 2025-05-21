@@ -1,6 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.models.enums;
 
-enum StatusEnum {
+public enum StatusEnum {
     OPEN,
     CLOSED,
     TEMPORARILY_CLOSED,

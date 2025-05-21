@@ -16,20 +16,20 @@ public abstract class User {
     private String bio;
     private List<UUID> followers;
 
-
-
     public User() {
-        this.id = UUID.randomUUID();
-        this.followers = new ArrayList<>();
-        this.isAccountConfirmed = false;
     }
 
-    public User(String email, String phoneNumber, String username, String password) {
-        this();
+    public User(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, List<UUID> followers) {
+        this.id = id;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.username = username;
         this.password = password;
+        this.profilePicUrl = profilePicUrl;
+        this.isAccountConfirmed = isAccountConfirmed;
+        this.confirmationCode = confirmationCode;
+        this.bio = bio;
+        this.followers = followers;
     }
 
     public UUID getId() {

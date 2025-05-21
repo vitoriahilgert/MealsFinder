@@ -1,6 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.models.enums;
 
-enum EstablishmentTypesEnum {
+public enum EstablishmentTypesEnum {
     A,
     B,
     C;
