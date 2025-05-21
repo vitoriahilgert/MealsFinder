@@ -1,4 +1,7 @@
-package br.edu.ufscar.backend.mealsfinder;
+package br.edu.ufscar.backend.mealsfinder.models;
+
+import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypeEnum;
+import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 
 import java.util.ArrayList;
 import java.util.List;

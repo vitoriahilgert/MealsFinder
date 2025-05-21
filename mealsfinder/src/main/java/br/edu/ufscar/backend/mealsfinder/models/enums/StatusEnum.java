@@ -1,4 +1,4 @@
-package br.edu.ufscar.backend.mealsfinder;
+package br.edu.ufscar.backend.mealsfinder.models.enums;
 
 enum StatusEnum {
     OPEN,
