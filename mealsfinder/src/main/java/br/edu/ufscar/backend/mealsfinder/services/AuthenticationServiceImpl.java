@@ -1,12 +1,18 @@
+package br.edu.ufscar.backend.mealsfinder.services;
+
+import br.edu.ufscar.backend.mealsfinder.models.User;
+import br.edu.ufscar.backend.mealsfinder.models.UserFactory;
+
+import java.util.UUID;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
-    public Client registerClient(UUID id) {
+    public User registerClient(UUID id) {
         return UserFactory.createClient(id);
     }
 
     @Override
-    public Establishment registerEstablishment(UUID id) {
+    public User registerEstablishment(UUID id) {
         return UserFactory.createEstablishment(id);
     }
 }

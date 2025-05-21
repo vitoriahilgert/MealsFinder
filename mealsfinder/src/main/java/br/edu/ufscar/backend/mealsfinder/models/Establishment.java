@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class Establishment extends User {
+public class Establishment extends User {
     private String cnpj;
     private EstablishmentTypesEnum type;
     private boolean isDelivery;

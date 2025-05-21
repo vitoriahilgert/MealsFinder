@@ -1,7 +1,9 @@
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuthenticationController {
     // TODO: implementar injecão de dependencia
-    private final UserService userService;
+    @Autowired
+    private AuthenticationServiceImpl authenticationService;
 
     public AuthenticationController(UserService userService) {
         this.userService = userService;

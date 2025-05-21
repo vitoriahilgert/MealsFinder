@@ -1,5 +1,11 @@
-public interface AuthenticationService {
-    Client registerClient(UUID id);
+package br.edu.ufscar.backend.mealsfinder.services;
 
-    Establishment registerEstablishment(UUID id);
+import br.edu.ufscar.backend.mealsfinder.models.User;
+
+import java.util.UUID;
+
+public interface AuthenticationService {
+    User registerClient(UUID id);
+
+    User registerEstablishment(UUID id);
 }
