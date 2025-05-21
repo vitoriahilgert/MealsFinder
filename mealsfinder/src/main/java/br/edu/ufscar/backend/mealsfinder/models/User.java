@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class User {
+abstract class User {
     private UUID id;
     private String email;
     private String phoneNumber;

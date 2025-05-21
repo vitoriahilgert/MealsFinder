@@ -6,7 +6,7 @@ import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Establishment extends User {
+class Establishment extends User {
     private String cnpj;
     private EstablishmentTypeEnum type;
     private boolean isDelivery;

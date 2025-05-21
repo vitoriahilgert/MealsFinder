@@ -2,7 +2,7 @@ package br.edu.ufscar.backend.mealsfinder.models;
 
 import java.util.UUID;
 
-public class Review extends Content {
+class Review extends Content {
     private UUID establishmentId;
     
     private boolean isDelivery;

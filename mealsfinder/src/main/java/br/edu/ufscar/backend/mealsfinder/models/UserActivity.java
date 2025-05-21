@@ -6,7 +6,7 @@ import test.mealsfinder.models.enums.EntityTypeEnum;
 
 import java.util.UUID;
 
-public class UserActivity {
+class UserActivity {
     private UUID id;
     private UUID userId;
     private UUID entityId;
