@@ -9,7 +9,7 @@ public abstract class User {
     private String email;
     private String phoneNumber;
     private String username;
-    private String password;    // Todo: criptografar
+    private String password;
     private String profilePicUrl;
     private boolean isAccountConfirmed;
     private String confirmationCode;
