@@ -1,6 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.controllers;
 
+import br.edu.ufscar.backend.mealsfinder.dtos.authentication.ClientRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.CredentialsDTO;
+import br.edu.ufscar.backend.mealsfinder.dtos.authentication.EstablishmentRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.models.User;
 import br.edu.ufscar.backend.mealsfinder.services.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +32,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register/client")
-    public ResponseEntity<User> registerClient() {
-        UUID id = UUID.randomUUID();
-        User user = authenticationService.registerClient(id);
+    public ResponseEntity<User> registerClient(@RequestBody ClientRegisterDTO dto) {
+        User user = authenticationService.registerClient(dto);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping("/register/establishment")
-    public ResponseEntity<User> registerEstablishment() {
-        UUID id = UUID.randomUUID();
-        User user = authenticationService.registerEstablishment(id);
+    public ResponseEntity<User> registerEstablishment(@RequestBody EstablishmentRegisterDTO dto) {
+        User user = authenticationService.registerEstablishment(dto);
         return ResponseEntity.ok(user);
     }
 }

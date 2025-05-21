@@ -1,6 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.services.authentication;
 
+import br.edu.ufscar.backend.mealsfinder.dtos.authentication.ClientRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.CredentialsDTO;
+import br.edu.ufscar.backend.mealsfinder.dtos.authentication.EstablishmentRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.models.User;
 import br.edu.ufscar.backend.mealsfinder.models.UserFactory;
 import br.edu.ufscar.backend.mealsfinder.services.authentication.strategies.ILoginStrategy;
@@ -22,13 +24,13 @@ public class AuthenticationService implements IAuthenticationService, ILoginStra
     }
 
     @Override
-    public User registerClient(UUID id) {
-        return UserFactory.createClient(id);
+    public User registerClient(ClientRegisterDTO clientRegisterDTO) {
+        return UserFactory.createClient(clientRegisterDTO);
     }
 
     @Override
-    public User registerEstablishment(UUID id) {
-        return UserFactory.createEstablishment(id);
+    public User registerEstablishment(EstablishmentRegisterDTO establishmentRegisterDTO) {
+        return UserFactory.createEstablishment(establishmentRegisterDTO);
     }
 
 }
