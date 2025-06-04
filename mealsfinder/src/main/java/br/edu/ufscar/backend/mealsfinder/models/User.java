@@ -1,5 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.services.commentservice.ContentRelationshipService;
+import br.edu.ufscar.backend.mealsfinder.services.userrelationship.UserRelationshipService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,12 +17,13 @@ public abstract class User {
     private boolean isAccountConfirmed;
     private String confirmationCode;
     private String bio;
-    private List<UUID> followers;
+
+    protected UserRelationshipService userRelationshipService;
 
     public User() {
     }
 
-    public User(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, List<UUID> followers) {
+    public User(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio) {
         this.id = id;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -29,7 +33,6 @@ public abstract class User {
         this.isAccountConfirmed = isAccountConfirmed;
         this.confirmationCode = confirmationCode;
         this.bio = bio;
-        this.followers = followers;
     }
 
     public UUID getId() {
@@ -105,21 +108,19 @@ public abstract class User {
     }
 
     public List<UUID> getFollowers() {
-        return followers;
+        return userRelationshipService.getFollowers(this.getId());
     }
 
-    public void setFollowers(List<UUID> followers) {
-        this.followers = followers;
+    public void setUserRelationshipService(UserRelationshipService userService) {
+        this.userRelationshipService = userService;
     }
-    
+
     public void addFollower(UUID followerId) {
-        if (!followers.contains(followerId)) {
-            followers.add(followerId);
-        }
+        userRelationshipService.followUser(this.getId(), followerId);
     }
     
     public void removeFollower(UUID followerId) {
-        followers.remove(followerId);
+        userRelationshipService.unfollowUser(this.getId(), followerId);
     }
     
     // Abstract methods that subclasses must implement

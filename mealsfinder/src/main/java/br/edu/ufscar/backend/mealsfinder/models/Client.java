@@ -1,30 +1,24 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
 import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTypesEnum;
+import br.edu.ufscar.backend.mealsfinder.services.commentservice.ContentRelationshipService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Client extends User {
     private List<FoodTypesEnum> likes;
     private List<FoodTypesEnum> dislikes;
-    private List<User> following;
-    private List<User> blockList;
-    private List<Post> savedPosts;
-    private List<Review> reviews;
+
+    private ContentRelationshipService contentRelationshipService;
 
     public Client() {
     }
 
-    public Client(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, List<UUID> followers, List<FoodTypesEnum> likes, List<FoodTypesEnum> dislikes, List<User> following, List<User> blockList, List<Post> savedPosts, List<Review> reviews) {
-        super(id, email, phoneNumber, username, password, profilePicUrl, isAccountConfirmed, confirmationCode, bio, followers);
+    public Client(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, List<FoodTypesEnum> likes, List<FoodTypesEnum> dislikes) {
+        super(id, email, phoneNumber, username, password, profilePicUrl, isAccountConfirmed, confirmationCode, bio);
         this.likes = likes;
         this.dislikes = dislikes;
-        this.following = following;
-        this.blockList = blockList;
-        this.savedPosts = savedPosts;
-        this.reviews = reviews;
     }
 
     public List<FoodTypesEnum> getLikes() {
@@ -43,36 +37,20 @@ public class Client extends User {
         this.dislikes = dislikes;
     }
 
-    public List<User> getFollowing() {
-        return following;
+    public List<UUID> getFollowing() {
+        return userRelationshipService.getFollowing(this.getId());
     }
 
-    public void setFollowing(List<User> following) {
-        this.following = following;
+    public List<UUID> getBlockList() {
+        return userRelationshipService.getBlockedUsers(this.getId());
     }
 
-    public List<User> getBlockList() {
-        return blockList;
+    public List<UUID> getSavedPosts() {
+        return contentRelationshipService.getSavedPosts(this.getId());
     }
 
-    public void setBlockList(List<User> blockList) {
-        this.blockList = blockList;
-    }
-
-    public List<Post> getSavedPosts() {
-        return savedPosts;
-    }
-
-    public void setSavedPosts(List<Post> savedPosts) {
-        this.savedPosts = savedPosts;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public List<UUID> getReviews() {
+        return contentRelationshipService.getReviewsByUser(this.getId());
     }
 
     public void addLike(FoodTypesEnum foodType) {
@@ -87,27 +65,21 @@ public class Client extends User {
         }
     }
     
-    public void followUser(User user) {
-        if (!following.contains(user)) {
-            following.add(user);
+    public void followUser(UUID userId) {
+        if (!userRelationshipService.isFollowing(this.getId(), userId) || !userRelationshipService.isBlocked(this.getId(), userId)) {
+            userRelationshipService.followUser(this.getId(), userId);
         }
     }
     
-    public void blockUser(User user) {
-        if (!blockList.contains(user)) {
-            blockList.add(user);
+    public void blockUser(UUID userId) {
+        if (!userRelationshipService.isBlocked(this.getId(), userId)) {
+            userRelationshipService.blockUser(this.getId(), userId);
         }
     }
     
-    public void savePost(Post post) {
-        if (!savedPosts.contains(post)) {
-            savedPosts.add(post);
-        }
-    }
-    
-    public void addReview(Review review) {
-        if (!reviews.contains(review)) {
-            reviews.add(review);
+    public void savePost(UUID postId) {
+        if (!contentRelationshipService.isPostSavedByUser(this.getId(), postId)) {
+            contentRelationshipService.savePost(this.getId(), postId);
         }
     }
 
@@ -123,7 +95,7 @@ public class Client extends User {
                 ", username='" + getUsername() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 ", likes=" + likes.size() +
-                ", following=" + following.size() +
+                ", following=" + userRelationshipService.getFollowing(this.getId()).size() +
                 '}';
     }
 }

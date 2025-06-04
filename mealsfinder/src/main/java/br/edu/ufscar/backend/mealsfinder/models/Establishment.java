@@ -21,8 +21,8 @@ public class Establishment extends User {
     public Establishment() {
     }
 
-    public Establishment(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, List<UUID> followers, String cnpj, EstablishmentTypesEnum type, boolean isDelivery, boolean isInPerson, StatusEnum status, Address address, List<String> menuUrls, List<String> establishmentPicturesUrls, int rejections) {
-        super(id, email, phoneNumber, username, password, profilePicUrl, isAccountConfirmed, confirmationCode, bio, followers);
+    public Establishment(UUID id, String email, String phoneNumber, String username, String password, String profilePicUrl, boolean isAccountConfirmed, String confirmationCode, String bio, String cnpj, EstablishmentTypesEnum type, boolean isDelivery, boolean isInPerson, StatusEnum status, Address address, List<String> menuUrls, List<String> establishmentPicturesUrls, int rejections) {
+        super(id, email, phoneNumber, username, password, profilePicUrl, isAccountConfirmed, confirmationCode, bio);
         this.cnpj = cnpj;
         this.type = type;
         this.isDelivery = isDelivery;
