@@ -11,4 +11,7 @@ public interface IAuthenticationService {
     User registerClient(ClientRegisterDTO clientRegisterDTO);
 
     User registerEstablishment(EstablishmentRegisterDTO establishmentRegisterDTO);
+
+    void login(CredentialsDTO credentials);
 }
+

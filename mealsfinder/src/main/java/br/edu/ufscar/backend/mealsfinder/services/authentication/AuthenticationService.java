@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class AuthenticationService implements IAuthenticationService, ILoginStrategy {
+public class AuthenticationService implements IAuthenticationService {
     @Autowired
     private LoginStrategyFactory loginStrategyFactory;
 
@@ -34,3 +34,4 @@ public class AuthenticationService implements IAuthenticationService, ILoginStra
     }
 
 }
+

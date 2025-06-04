@@ -7,10 +7,13 @@ import java.util.UUID;
 
 public class UserFactory {
     public static User createClient(ClientRegisterDTO clientDTO) {
+
         return new Client();
     }
 
     public static User createEstablishment(EstablishmentRegisterDTO establishmentDTO) {
+
         return new Establishment();
     }
 }
+
