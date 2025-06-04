@@ -1,10 +1,6 @@
-package br.edu.ufscar.backend.mealsfinder.services.commentservice;
-
-import jdk.jshell.spi.ExecutionControl;
-import org.springframework.data.repository.core.support.FragmentNotImplementedException;
+package br.edu.ufscar.backend.mealsfinder.services.contentrelationship;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ContentRelationshipService implements IContentRelationshipService {
     private final Map<UUID, Set<UUID>> postCommentsMap = new HashMap<>(); // postId -> commentIds

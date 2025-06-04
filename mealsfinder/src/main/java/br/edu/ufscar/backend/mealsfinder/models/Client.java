@@ -1,7 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
 import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTypesEnum;
-import br.edu.ufscar.backend.mealsfinder.services.commentservice.ContentRelationshipService;
+import br.edu.ufscar.backend.mealsfinder.services.contentrelationship.ContentRelationshipService;
+import br.edu.ufscar.backend.mealsfinder.services.userrelationship.UserRelationshipService;
 
 import java.util.List;
 import java.util.UUID;
@@ -76,10 +77,20 @@ public class Client extends User {
             userRelationshipService.blockUser(this.getId(), userId);
         }
     }
+
+    public void setContentRelationshipService(ContentRelationshipService contentService) {
+        this.contentRelationshipService = contentService;
+    }
     
     public void savePost(UUID postId) {
         if (!contentRelationshipService.isPostSavedByUser(this.getId(), postId)) {
             contentRelationshipService.savePost(this.getId(), postId);
+        }
+    }
+
+    public void unsavePost(UUID postId) {
+        if (contentRelationshipService.isPostSavedByUser(this.getId(), postId)) {
+            contentRelationshipService.unsavePost(this.getId(), postId);
         }
     }
 
@@ -94,7 +105,7 @@ public class Client extends User {
                 "id=" + getId() +
                 ", username='" + getUsername() + '\'' +
                 ", email='" + getEmail() + '\'' +
-                ", likes=" + likes.size() +
+                ", likes=" + likes.toString() +
                 ", following=" + userRelationshipService.getFollowing(this.getId()).size() +
                 '}';
     }

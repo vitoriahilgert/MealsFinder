@@ -1,4 +1,4 @@
-package br.edu.ufscar.backend.mealsfinder.services.commentservice;
+package br.edu.ufscar.backend.mealsfinder.services.contentrelationship;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,9 +1,7 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import br.edu.ufscar.backend.mealsfinder.services.commentservice.ContentRelationshipService;
 import br.edu.ufscar.backend.mealsfinder.services.userrelationship.UserRelationshipService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
