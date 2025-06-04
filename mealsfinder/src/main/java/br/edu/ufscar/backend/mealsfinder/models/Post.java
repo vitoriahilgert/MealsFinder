@@ -9,20 +9,17 @@ import java.util.UUID;
 class Post extends Content {
     private List<String> pictureUrls;
     private List<FoodTypesEnum> tags;
-    private List<UUID> commentIds;
     
     public Post() {
         super();
         this.pictureUrls = new ArrayList<>();
         this.tags = new ArrayList<>();
-        this.commentIds = new ArrayList<>();
     }
     
     public Post(UUID creatorId, String text) {
         super(creatorId, text);
         this.pictureUrls = new ArrayList<>();
         this.tags = new ArrayList<>();
-        this.commentIds = new ArrayList<>();
     }
 
     public List<String> getPictureUrls() {
@@ -62,25 +59,21 @@ class Post extends Content {
     }
 
     public List<UUID> getCommentIds() {
-        return commentIds;
-    }
-
-    public void setCommentIds(List<UUID> commentIds) {
-        this.commentIds = commentIds;
+        return contentRelationshipService.getCommentsByPost(this.getId());
     }
 
     public void addComment(UUID commentId) {
-        if (commentId != null && !commentIds.contains(commentId)) {
-            commentIds.add(commentId);
-        }
+        if (!this.getCommentIds().contains(commentId))
+            contentRelationshipService.addCommentToPost(this.getId(), commentId);
     }
 
-    public boolean removeComment(UUID commentId) {
-        return commentIds.remove(commentId);
+    public void removeComment(UUID commentId) {
+        if (this.getCommentIds().contains(commentId))
+            contentRelationshipService.removeCommentFromPost(this.getId(), commentId);
     }
 
     public int getCommentCount() {
-        return commentIds.size();
+        return this.getCommentIds().size();
     }
     
     @Override

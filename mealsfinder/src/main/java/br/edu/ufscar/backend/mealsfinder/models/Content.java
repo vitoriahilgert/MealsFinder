@@ -1,5 +1,7 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.services.contentrelationship.ContentRelationshipService;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +10,14 @@ import java.util.UUID;
 abstract class Content {
     private UUID id;
     private String text;
-    private List<UUID> likes;
     private UUID creatorId;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
 
+    protected ContentRelationshipService contentRelationshipService;
+
     public Content() {
         this.id = UUID.randomUUID();
-        this.likes = new ArrayList<>();
         this.creationDate = LocalDateTime.now();
         this.lastModifiedDate = this.creationDate;
     }
@@ -43,16 +45,16 @@ abstract class Content {
         this.lastModifiedDate = LocalDateTime.now();
     }
 
-    public List<UUID> getLikes() {
-        return likes;
+    public void setContentRelationshipService(ContentRelationshipService contentService) {
+        this.contentRelationshipService = contentService;
     }
 
-    public void setLikes(List<UUID> likes) {
-        this.likes = likes;
+    public List<UUID> getLikes() {
+        return contentRelationshipService.getContentLikes(this.getId());
     }
-    
+
     public int getLikeCount() {
-        return likes.size();
+        return contentRelationshipService.getContentLikeCount(this.getId());
     }
 
     public UUID getCreatorId() {
@@ -79,20 +81,18 @@ abstract class Content {
         this.lastModifiedDate = lastModifiedDate;
     }
     
-    public boolean addLike(UUID userId) {
-        if (!likes.contains(userId)) {
-            likes.add(userId);
-            return true;
-        }
-        return false;
+    public void addLike(UUID userId) {
+        if (!contentRelationshipService.isContentLikedByUser(this.getId(),userId))
+            contentRelationshipService.likeContent(this.getId(), userId);
     }
 
-    public boolean removeLike(UUID userId) {
-        return likes.remove(userId);
+    public void removeLike(UUID userId) {
+        if (contentRelationshipService.isContentLikedByUser(this.getId(),userId))
+            contentRelationshipService.unlikeContent(this.getId(), userId);
     }
 
     public boolean isLikedBy(UUID userId) {
-        return likes.contains(userId);
+        return contentRelationshipService.isContentLikedByUser(this.getId(), userId);
     }
 
     public abstract String getContentType();
