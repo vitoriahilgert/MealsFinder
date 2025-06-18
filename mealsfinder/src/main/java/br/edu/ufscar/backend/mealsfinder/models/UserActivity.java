@@ -1,93 +1,45 @@
-package test.mealsfinder.models;
+package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.models.enums.ActionTypeEnum;
+import br.edu.ufscar.backend.mealsfinder.models.enums.EntityTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import test.mealsfinder.models.enums.ActionTypeEnum;
-import test.mealsfinder.models.enums.EntityTypeEnum;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
 
 import java.util.UUID;
 
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 class UserActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID userId;
+
+    @ManyToOne
+    private User user;
+
+    @Column(nullable = false)
     private UUID entityId;
+
+    @Column(nullable = false)
     private ActionTypeEnum actionType;
+
+    @Column(nullable = false)
     private EntityTypeEnum entityType;
+
+    @CreationTimestamp
     private int timestamp;
+
+    @Column(nullable = false)
     private float engagementScore;
+
     private ObjectMapper context;
-
-    public UserActivity(UUID id, UUID userId, UUID entityId, ActionTypeEnum actionType, EntityTypeEnum entityType, int timestamp, float engagementScore, ObjectMapper context) {
-        this.id = id;
-        this.userId = userId;
-        this.entityId = entityId;
-        this.actionType = actionType;
-        this.entityType = entityType;
-        this.timestamp = timestamp;
-        this.engagementScore = engagementScore;
-        this.context = context;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(UUID entityId) {
-        this.entityId = entityId;
-    }
-
-    public ActionTypeEnum getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(ActionTypeEnum actionType) {
-        this.actionType = actionType;
-    }
-
-    public EntityTypeEnum getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(EntityTypeEnum entityType) {
-        this.entityType = entityType;
-    }
-
-    public int getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public float getEngagementScore() {
-        return engagementScore;
-    }
-
-    public void setEngagementScore(float engagementScore) {
-        this.engagementScore = engagementScore;
-    }
-
-    public ObjectMapper getContext() {
-        return context;
-    }
-
-    public void setContext(ObjectMapper context) {
-        this.context = context;
-    }
 }

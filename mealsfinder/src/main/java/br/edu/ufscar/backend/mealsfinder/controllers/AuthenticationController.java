@@ -5,6 +5,7 @@ import br.edu.ufscar.backend.mealsfinder.dtos.authentication.CredentialsDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.EstablishmentRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.models.User;
 import br.edu.ufscar.backend.mealsfinder.services.authentication.AuthenticationService;
+import br.edu.ufscar.backend.mealsfinder.services.authentication.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +19,7 @@ import java.util.UUID;
 @RequestMapping("/auth")
 public class AuthenticationController {
     @Autowired
-    private AuthenticationService authenticationService;
-
-    @Autowired
-    public AuthenticationController(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
-    }
+    private IAuthenticationService authenticationService;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody CredentialsDTO credentials) {
@@ -43,3 +39,5 @@ public class AuthenticationController {
         return ResponseEntity.ok(user);
     }
 }
+
+

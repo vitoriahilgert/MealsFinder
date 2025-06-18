@@ -17,10 +17,8 @@ public class LoginStrategyFactory {
     }
 
     public ILoginStrategy getStrategy(String method) {
-        ILoginStrategy strategy = strategies.get(method);
-        if (strategy == null) {
-            throw new IllegalArgumentException("Unknown login method: " + method);
-        }
-        return strategy;
+        return strategies.get(method);
     }
 }
+
+

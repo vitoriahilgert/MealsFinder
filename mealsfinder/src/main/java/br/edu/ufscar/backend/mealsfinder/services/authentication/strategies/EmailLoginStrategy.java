@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 public class EmailLoginStrategy implements ILoginStrategy {
     @Override
     public void login(CredentialsDTO credentials) {
-        return;
+        System.out.println("Autenticação por e-mail");
     }
 }
+
