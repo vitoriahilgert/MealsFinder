@@ -12,7 +12,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Entity(tableName = "users")
 @Getter
 @Setter
 @NoArgsConstructor

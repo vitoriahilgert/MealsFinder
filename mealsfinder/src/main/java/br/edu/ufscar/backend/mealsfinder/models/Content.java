@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(tableName = "content")
 @Getter
 @Setter
 @NoArgsConstructor
