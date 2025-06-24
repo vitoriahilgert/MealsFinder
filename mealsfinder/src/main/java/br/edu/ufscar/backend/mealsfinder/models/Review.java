@@ -1,25 +1,25 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import jakarta.persistence.*;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 
-@Entity
+@Entity(name = "reviews")
 class Review extends Post {
-    @Column(nullable = false)
+    @Column(name = "price")
     private Double price;
 
-    @Column(nullable = false)
+    @Column(name = "rating")
     private Double rating;
 
-    @Column(nullable = false)
+    @Column(name = "is_delivery")
     private boolean isDelivery;
 
-    @Column
+    @Column(name = "establishment_rating")
     private Double establishmentRating;
 
-    @Column
+    @Column(name = "service_rating")
     private Double serviceRating;
 
-    @Column
+    @Column(name = "delivery_rating")
     private Double deliveryRating;
 
     public Review() {

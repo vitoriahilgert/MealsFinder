@@ -1,19 +1,11 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "comment")
 class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
 //    @Column(nullable = false)

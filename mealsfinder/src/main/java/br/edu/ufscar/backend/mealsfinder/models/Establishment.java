@@ -3,38 +3,42 @@ package br.edu.ufscar.backend.mealsfinder.models;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.ImageType;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
-import jakarta.persistence.*;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import org.hibernate.type.descriptor.jdbc.SmallIntJdbcType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity(name = "establishment")
+@Entity(name = "establishments")
 public class Establishment extends User {
-    @Column(nullable = false, name = "cnpj")
+    @Column(name = "cnpj")
     private String cnpj;
 
-    @Column(nullable = false, name = "type")
+    @Column(name = "type")
     @Enumerated(EnumType.ORDINAL)
     private EstablishmentTypesEnum type;
 
-    @Column(nullable = false, name = "is_delivery")
+    @Column(name = "is_delivery")
     private boolean isDelivery;
 
-    @Column(nullable = false, name = "is_in_person")
+    @Column(name = "is_in_person")
     private boolean isInPerson;
 
-    @Column(nullable = false, name = "status")
+    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
     private StatusEnum status;
 
-    @Embedded
+    @Embedded(name = "address")
     private Address address;
 
     @Column(name = "rejections")
-    private int rejections;
+    private short rejections;
 
-    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+//    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Image> images = new ArrayList<>();
 //
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Post> posts = new ArrayList<>();
@@ -42,17 +46,17 @@ public class Establishment extends User {
     public Establishment() {
     }
 
-    public List<Image> getMenuUrls() {
-        return this.images.stream()
-                .filter(image -> image.getType() == ImageType.MENU)
-                .collect(Collectors.toList());
-    }
-
-    public List<Image> getEstablishmentPicturesUrls() {
-        return this.images.stream()
-                .filter(image -> image.getType() == ImageType.ESTABLISHMENT_PICTURE)
-                .collect(Collectors.toList());
-    }
+//    public List<Image> getMenuUrls() {
+//        return this.images.stream()
+//                .filter(image -> image.getType() == ImageType.MENU)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<Image> getEstablishmentPicturesUrls() {
+//        return this.images.stream()
+//                .filter(image -> image.getType() == ImageType.ESTABLISHMENT_PICTURE)
+//                .collect(Collectors.toList());
+//    }
 
     public String getCnpj() {
         return cnpj;
@@ -102,19 +106,19 @@ public class Establishment extends User {
         this.address = address;
     }
 
-    public int getRejections() {
+    public short getRejections() {
         return rejections;
     }
 
-    public void setRejections(int rejections) {
+    public void setRejections(short rejections) {
         this.rejections = rejections;
     }
 
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images;
-    }
+//    public List<Image> getImages() {
+//        return images;
+//    }
+//
+//    public void setImages(List<Image> images) {
+//        this.images = images;
+//    }
 }

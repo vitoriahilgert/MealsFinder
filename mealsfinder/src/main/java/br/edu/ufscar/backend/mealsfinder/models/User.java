@@ -1,46 +1,45 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
 import br.edu.ufscar.backend.mealsfinder.framework.PersistenceFramework;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
+import br.edu.ufscar.backend.mealsfinder.models.enums.UserRoleEnum;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "users")
-@Table(name = "users")
 public abstract class User extends PersistenceFramework {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @Column(unique=true)
+    @Column(name = "email")
     private String email;
 
-    @Column(unique=true)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(unique=true)
+    @Column(name = "username")
     private String username;
 
-    @Column(nullable=false)
+    @Column(name = "password")
     private String password;
 
-    @Column
+    @Column(name = "profile_pic_url")
     private String profilePicUrl;
 
-    @Column
+    @Column(name = "is_account_confirmed")
     private boolean isAccountConfirmed;
 
-    @Column
+    @Column(name = "confirmation_code")
     private String confirmationCode;
 
-    @Column
+    @Column(name = "bio")
     private String bio;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.ORDINAL)
+    private UserRoleEnum role;
 
 //    @OneToMany(mappedBy = "user")
 //    private List<Client> followers = new ArrayList<>();
@@ -120,7 +119,15 @@ public abstract class User extends PersistenceFramework {
         this.bio = bio;
     }
 
-//    public List<Client> getFollowers() {
+    public UserRoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(UserRoleEnum role) {
+        this.role = role;
+    }
+
+    //    public List<Client> getFollowers() {
 //        return followers;
 //    }
 //

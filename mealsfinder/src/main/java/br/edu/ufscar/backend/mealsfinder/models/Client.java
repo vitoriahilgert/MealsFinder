@@ -7,8 +7,8 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "client")
-@jakarta.persistence.Entity
+
+@Entity(name = "client")
 public class Client extends User {
     // private List<FoodTypesEnum> likes;
     // private List<FoodTypesEnum> dislikes;

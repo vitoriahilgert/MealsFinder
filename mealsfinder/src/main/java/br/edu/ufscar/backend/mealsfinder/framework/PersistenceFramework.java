@@ -1,8 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.framework;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.yaml.snakeyaml.util.Tuple;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -19,76 +19,101 @@ public class PersistenceFramework {
     }
 
     public <T> void insert(T entity) throws Exception {
-        Connection conn = DriverManager.getConnection(databasePath);
-
         Class<?> clazz = entity.getClass();
 
         if (!clazz.isAnnotationPresent(Entity.class)) {
             throw new Exception("A classe não é uma entidade JPA.");
         }
 
-        if (clazz.getSuperclass() != null && clazz.getSuperclass().isAnnotationPresent(Entity.class)) {
-            // Inserir primeiro na superclass
-            String sql = this.buildInsertSQL(clazz.getSuperclass());
+        UUID entityId = UUID.randomUUID();
 
-            this.insertSQL(entity.getClass().getSuperclass(), sql, conn);
+        try (Connection conn = DriverManager.getConnection(databasePath)) {
+            if (clazz.getSuperclass() != null && clazz.getSuperclass().isAnnotationPresent(Entity.class)) {
+                // Inserir primeiro na superclass
+
+                this.insertSQL(entity, clazz.getSuperclass(), conn, entityId);
+
+                System.out.println("Inserido com sucesso na classe " + clazz.getSuperclass().getSimpleName());
+            }
+
+            this.insertSQL(entity, clazz, conn, entityId);
 
             System.out.println("Inserido com sucesso na classe " + clazz.getSuperclass().getSimpleName());
         }
-
-        String sql = this.buildInsertSQL(clazz);
-
-        this.insertSQL(entity.getClass(), sql, conn);
-
-        System.out.println("Inserido com sucesso na classe " + clazz.getSuperclass().getSimpleName());
-
     }
 
     private List<String> getColumnNames(Field[] fields) {
         List<String> columnNames = new ArrayList<>();
 
         for (Field field : fields) {
-            field.setAccessible(true);
             if (field.isAnnotationPresent(Column.class)) {
-                Column columnAnnotation = field.getAnnotation(Column.class);
-                String columnName;
-                if (columnAnnotation.name() == null || columnAnnotation.name().isEmpty()) {
-                    columnName = field.getName().toLowerCase();
-                } else {
-                    String regex = "(.)(?=[A-Z])";
-                    String replacement = "$1_";
+                field.setAccessible(true);
 
-                    columnName = columnAnnotation.name().replaceAll(regex, replacement).toLowerCase();
-                }
+                Column columnAnnotation = field.getAnnotation(Column.class);
+                String columnName = columnAnnotation.name();
                 columnNames.add(columnName);
+            } else if (field.isAnnotationPresent(Embedded.class)) {
+                field.setAccessible(true);
+
+                Class<?> embeddedClass = field.getType();
+
+                if (embeddedClass.isAnnotationPresent(Embeddable.class)) {
+                    String embeddedName = embeddedClass.getAnnotation(Embeddable.class).name();
+                    Field[] embeddedFields = embeddedClass.getDeclaredFields();
+                    for (Field embeddedField : embeddedFields) {
+                        if (embeddedField.isAnnotationPresent(Column.class)) {
+                            Column columnAnnotation = embeddedField.getAnnotation(Column.class);
+                            String columnName = embeddedName + "_" + columnAnnotation.name();
+                            columnNames.add(columnName);
+                        }
+                    }
+                }
             }
         }
 
         return columnNames;
     }
 
+    private <T> List<Object> getValues(T entity, Field[] fields) throws IllegalAccessException {
+        List<Object> values = new ArrayList<>();
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Column.class)) {
+                field.setAccessible(true);
+                values.add(field.get(entity));
+            } else if (field.isAnnotationPresent(Embedded.class)) {
+                field.setAccessible(true);
+                Object embeddedValue = field.get(entity);
+                if (embeddedValue != null) {
+                    for (Field embeddedField : embeddedValue.getClass().getDeclaredFields()) {
+                        if (embeddedField.isAnnotationPresent(Column.class)) {
+                            embeddedField.setAccessible(true);
+                            values.add(embeddedField.get(embeddedValue));
+                        }
+                    }
+                }
+            }
+        }
+        return values;
+    }
+
     private String buildInsertSQL(Class<?> clazz) {
         Entity entityAnnotation = clazz.getAnnotation(Entity.class);
 
-        String tableName;
-
-        if (entityAnnotation.name() == null || entityAnnotation.name().isEmpty()) {
-            tableName = clazz.getSimpleName().toLowerCase();
-        } else {
-            String regex = "(.)(?=[A-Z])";
-            String replacement = "$1_";
-
-            tableName = entityAnnotation.name().replaceAll(regex, replacement).toLowerCase();
-        }
+        String tableName = entityAnnotation.name();
 
         Field[] fields = clazz.getDeclaredFields();
         List<String> columnsList = this.getColumnNames(fields);
         String columns = String.join(", ", columnsList);
 
-        StringBuilder sql = (clazz.getSuperclass() == null) ? new StringBuilder("INSERT INTO " + tableName + " (id, " + columns + ")  VALUES (") :
-                new StringBuilder("INSERT INTO " + tableName + " (, " + columns + ")  VALUES (");
+        boolean hasParentEntity = clazz.getSuperclass().isAnnotationPresent(Entity.class);
 
-        int size = (clazz.getSuperclass() == null) ? columnsList.size() + 1 : columnsList.size();
+        String parentTableName = hasParentEntity ? clazz.getSuperclass().getSimpleName().toLowerCase() : null;
+
+        StringBuilder sql = !hasParentEntity ? new StringBuilder("INSERT INTO " + tableName + "(" + columns + ")  VALUES (") :
+                new StringBuilder("INSERT INTO " + tableName + "(" + parentTableName + "_id, " + columns + ")  VALUES (");
+
+        int size = hasParentEntity ? columnsList.size() + 1 : columnsList.size();
 
         for (int i = 0; i < size; i++) {
             sql.append("?");
@@ -100,24 +125,26 @@ public class PersistenceFramework {
         return sql.toString();
     }
 
-    private <T> void insertSQL(T entity, String sql, Connection connection) throws Exception {
-        Class<?> clazz = entity.getClass();
+    private <T> void insertSQL(T entity, Class<?> clazz, Connection connection, UUID entityId) throws Exception {
 
-        Field[] fields = clazz.getSuperclass().getDeclaredFields();
-        List<String> columnsList = this.getColumnNames(fields);
+        String sql = this.buildInsertSQL(clazz);
+
+        Field[] fields = clazz.getDeclaredFields();
+
+        List<Object> values = this.getValues(entity, fields);
+
+        if (fields[0].getAnnotation(Column.class).name().equals("id")) values.set(0, entityId);
 
         PreparedStatement statement = connection.prepareStatement(sql);
+        int parameterIndex = 1;
 
-        int i = 0; int size = columnsList.size();
-
-        if (clazz.getSuperclass() == null) {
-            statement.setString(1, UUID.randomUUID().toString());
-            i = 1; size +=1;
+        boolean hasParentEntity = clazz.getSuperclass().isAnnotationPresent(Entity.class);
+        if (hasParentEntity) {
+            statement.setObject(1, entityId);
+            parameterIndex++;
         }
-
-        for (; i < size; i++) {
-            Object value = fields[i].get(entity);
-            statement.setObject(i + 1, value);
+        for (Object value : values) {
+            statement.setObject(parameterIndex++, value);
         }
 
         statement.executeUpdate();

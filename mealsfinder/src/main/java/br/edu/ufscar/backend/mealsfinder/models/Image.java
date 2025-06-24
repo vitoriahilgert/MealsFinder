@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 
-@Entity
+//@Entity
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

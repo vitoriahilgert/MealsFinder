@@ -1,10 +1,10 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 
-@Embeddable
-class Address {
+
+@Embeddable(name = "address")
+public class Address {
     @Column(name = "cep")
     private String cep;
     @Column(name = "city")

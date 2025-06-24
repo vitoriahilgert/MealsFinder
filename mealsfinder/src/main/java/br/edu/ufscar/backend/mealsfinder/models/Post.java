@@ -1,24 +1,14 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTagsEnum;
-import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTypesEnum;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "posts")
 class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @Column
+    @Column(name = "description")
     private String description;
 
 //    @OneToMany(mappedBy = "post")

@@ -3,43 +3,78 @@ package br.edu.ufscar.backend.mealsfinder.models;
 import br.edu.ufscar.backend.mealsfinder.models.enums.ActionTypeEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EntityTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedBy;
 
 import java.util.UUID;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Entity(name = "user_activities")
 class UserActivity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @ManyToOne
-    private User user;
+//    @ManyToOne
+//    private User user;
+//
+//    @Column(nullable = false)
+//    private UUID entityId;
 
-    @Column(nullable = false)
-    private UUID entityId;
-
-    @Column(nullable = false)
+    @Column(name = "action_type")
     private ActionTypeEnum actionType;
 
-    @Column(nullable = false)
+    @Column(name = "entity_type")
     private EntityTypeEnum entityType;
 
     @CreationTimestamp
+    @Column(name = "timestamp")
     private int timestamp;
 
-    @Column(nullable = false)
+    @Column(name = "engagement_score")
     private float engagementScore;
 
-    private ObjectMapper context;
+    //private ObjectMapper context;
+
+
+    public UserActivity() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public ActionTypeEnum getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(ActionTypeEnum actionType) {
+        this.actionType = actionType;
+    }
+
+    public EntityTypeEnum getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityTypeEnum entityType) {
+        this.entityType = entityType;
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public float getEngagementScore() {
+        return engagementScore;
+    }
+
+    public void setEngagementScore(float engagementScore) {
+        this.engagementScore = engagementScore;
+    }
 }
