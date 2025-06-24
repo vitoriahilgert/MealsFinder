@@ -1,29 +1,29 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
 import br.edu.ufscar.backend.mealsfinder.models.enums.ImageType;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.UUID;
 
-@Entity
+@Entity(tableName = "images")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Image {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
-    @Column(nullable = false)
+    @Column(name = "url")
     private String url;
-    @Column(nullable = false)
+    @Column(name = "type")
     private ImageType type;
 
-    @ManyToOne
-    @JoinColumn(name = "establishment_id")
+    @Column(name = "establishment_id")
     private Establishment establishment;
 }

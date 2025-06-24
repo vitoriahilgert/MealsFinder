@@ -1,7 +1,9 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
 import br.edu.ufscar.backend.mealsfinder.framework.PersistenceFramework;
-import jakarta.persistence.*;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,87 +12,69 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Entity
-@Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@Entity(tableName = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "email")
     private String email;
 
-    @Column(unique = true)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "username")
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "profile_pic_url")
     private String profilePicUrl;
 
-    @Column(name = "is_account_confirmed", nullable = false)
+    @Column(name = "is_account_confirmed")
     private boolean isAccountConfirmed = false;
 
     @Column(name = "confirmation_code")
     private String confirmationCode;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "bio")
     private String bio;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "last_modified_date", nullable = false)
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Collection(targetEntity = Content.class, columnName = "created_content_ids")
     private Set<Content> createdContent = new HashSet<>();
 
-    @ManyToMany(mappedBy = "likes")
+    @Collection(targetEntity = Content.class, columnName = "liked_content_ids")
     private Set<Content> likedContent = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_saved_content",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "content_id")
-    )
+    @Collection(targetEntity = Content.class, columnName = "saved_content_ids")
     private Set<Content> savedContent = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_follows",
-            joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id")
-    )
+    @Collection(targetEntity = User.class, columnName = "following_ids")
     private Set<User> following = new HashSet<>();
 
-    @ManyToMany(mappedBy = "following")
+    @Collection(targetEntity = User.class, columnName = "followers_ids")
     private Set<User> followers = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_blocks",
-            joinColumns = @JoinColumn(name = "blocker_id"),
-            inverseJoinColumns = @JoinColumn(name = "blocked_id")
-    )
+    @Collection(targetEntity = User.class, columnName = "blocked_user_ids")
     private Set<User> blockedUsers = new HashSet<>();
 
-    @ManyToMany(mappedBy = "blockedUsers")
+    @Collection(targetEntity = User.class, columnName = "blocked_by_user_ids")
     private Set<User> blockedByUsers = new HashSet<>();
 
     public User(String email, String username, String password) {
+        this.id = UUID.randomUUID();
         this.email = email;
         this.username = username;
         this.password = password;
@@ -99,7 +83,6 @@ public abstract class User {
         this.isAccountConfirmed = false;
     }
 
-    @PreUpdate
     public void preUpdate() {
         this.lastModifiedDate = LocalDateTime.now();
     }

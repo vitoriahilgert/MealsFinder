@@ -1,45 +1,41 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import br.edu.ufscar.backend.mealsfinder.models.enums.ActionTypeEnum;
-import br.edu.ufscar.backend.mealsfinder.models.enums.EntityTypeEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedBy;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.UUID;
 
-@Entity
+@Entity(tableName = "user_activity")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 class UserActivity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @ManyToOne
+    @Column(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "entity_id")
     private UUID entityId;
 
-    @Column(nullable = false)
-    private ActionTypeEnum actionType;
+//    @Column(nullable = false)
+//    private ActionTypeEnum actionType;
+//
+//    @Column(nullable = false)
+//    private EntityTypeEnum entityType;
 
-    @Column(nullable = false)
-    private EntityTypeEnum entityType;
-
-    @CreationTimestamp
+    @Column(name = "timestamp")
     private int timestamp;
 
-    @Column(nullable = false)
+    @Column(name = "engagement_score")
     private float engagementScore;
 
-    private ObjectMapper context;
+    // private ObjectMapper context;
 }

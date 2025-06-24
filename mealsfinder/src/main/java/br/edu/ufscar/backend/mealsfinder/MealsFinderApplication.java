@@ -86,7 +86,7 @@ public class MealsFinderApplication {
 			establishment.setCnpj("79.536.761/0001-12");
 			establishment.setDelivery(true);
 			establishment.setEstablishmentType(EstablishmentTypesEnum.Lanchonete);
-			establishment.setStatus(StatusEnum.OPEN);
+			establishment.setStatus(StatusEnum.PENDING);
 			establishment.setRejections(0);
 			establishment.setInPerson(true);
 			establishment.setEmail("manapoke@gmail.com");

@@ -1,51 +1,41 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import jakarta.persistence.*;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-@Table(name = "content")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "content_type", discriminatorType = DiscriminatorType.STRING)
+@Entity(tableName = "content")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public abstract class Content {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "text")
     private String text;
 
-    @ManyToMany
-    @JoinTable(
-            name = "content_likes",
-            joinColumns = @JoinColumn(name = "content_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @Collection(targetEntity = User.class, columnName = "liked_by_ids")
     private Set<User> likes = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", nullable = false)
+    @Column(name = "creator_id")
     private User creator;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "last_modified_date", nullable = false)
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
-
-    @ManyToMany(mappedBy = "savedContent")
-    private Set<User> savedByUsers = new HashSet<>();
 
     public Content(User creator, String text) {
         this.creator = creator;
@@ -54,7 +44,6 @@ public abstract class Content {
         this.lastModifiedDate = this.creationDate;
     }
 
-    @PreUpdate
     public void preUpdate() {
         this.lastModifiedDate = LocalDateTime.now();
     }
@@ -73,14 +62,6 @@ public abstract class Content {
 
     public int getLikeCount() {
         return this.likes.size();
-    }
-
-    public boolean isSavedBy(User user) {
-        return this.savedByUsers.contains(user);
-    }
-
-    public int getSavedCount() {
-        return this.savedByUsers.size();
     }
 
     public abstract String getContentType();

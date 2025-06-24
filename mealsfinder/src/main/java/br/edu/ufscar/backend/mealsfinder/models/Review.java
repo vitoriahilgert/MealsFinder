@@ -1,43 +1,40 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTagsEnum;
-import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTypesEnum;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.*;
 
-@Entity
-@Table(name = "reviews")
-@DiscriminatorValue("REVIEW")
+@Entity(tableName = "reviews")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Review extends Post {
 
-    @Column(nullable = false)
+    @Column(name = "price")
     private Double price;
 
-    @Column(nullable = false)
+    @Column(name = "rating")
     private Double rating;
 
-    @Column(nullable = false)
+    @Column(name = "is_delivery")
     private boolean isDelivery;
 
-    @Column
+    @Column(name = "establishment_rating")
     private Double establishmentRating;
 
-    @Column
+    @Column(name = "service_rating")
     private Double serviceRating;
 
-    @Column
+    @Column(name = "delivery_rating")
     private Double deliveryRating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewed_post_id")
+    @Column(name = "reviewed_post_id")
     private Post reviewedPost;
 
     public Review(User creator, String text, String description, Double price, Double rating, boolean isDelivery) {

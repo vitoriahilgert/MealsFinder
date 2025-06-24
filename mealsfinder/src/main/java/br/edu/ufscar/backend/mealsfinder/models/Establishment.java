@@ -1,9 +1,11 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.ImageType;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -13,42 +15,60 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "establishments")
-@DiscriminatorValue("ESTABLISHMENT")
+@Entity(tableName = "establishments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Establishment extends User {
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "cnpj")
     private String cnpj;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column(name = "establishment_type")
     private EstablishmentTypesEnum establishmentType;
 
-    @Column(name = "is_delivery", nullable = false)
-    private boolean isDelivery = false;
+    @Column(name = "is_delivery")
+    private boolean delivery = false;  // Changed field name to match setter
 
-    @Column(name = "is_in_person", nullable = false)
-    private boolean isInPerson = true;
+    @Column(name = "is_in_person")
+    private boolean inPerson = true;   // Changed field name to match setter
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private StatusEnum status = StatusEnum.PENDING;
 
-    @Embedded
-    private Address address;
+    // Address embedded fields - you'll need to flatten these
+    @Column(name = "street")
+    private String street;
 
-    @Column(nullable = false)
+    @Column(name = "number")
+    private String number;
+
+    @Column(name = "complement")
+    private String complement;
+
+    @Column(name = "neighborhood")
+    private String neighborhood;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "cep")
+    private String cep;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "rejections")
     private int rejections = 0;
 
-    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Collection(targetEntity = Image.class, columnName = "image_ids")
     private Set<Image> images = new HashSet<>();
 
-    @OneToMany(mappedBy = "reviewedPost", cascade = CascadeType.ALL)
+    @Collection(targetEntity = Review.class, columnName = "received_review_ids")
     private Set<Review> receivedReviews = new HashSet<>();
 
     public Establishment(String email, String username, String password, String cnpj, EstablishmentTypesEnum establishmentType) {
@@ -124,10 +144,35 @@ public class Establishment extends User {
     }
 
     public boolean supportsDelivery() {
-        return this.isDelivery;
+        return this.delivery;  // Updated to match field name
     }
 
     public boolean supportsInPerson() {
-        return this.isInPerson;
+        return this.inPerson;  // Updated to match field name
+    }
+
+    // Helper methods for Address (since we flattened the embedded object)
+    public Address getAddress() {
+        Address address = new Address();
+        address.setStreet(this.street);
+        address.setNumber(this.number);
+        address.setNeighborhood(this.neighborhood);
+        address.setCity(this.city);
+        address.setState(this.state);
+        address.setCep(this.cep);
+        address.setCountry(this.country);
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        if (address != null) {
+            this.street = address.getStreet();
+            this.number = address.getNumber();
+            this.neighborhood = address.getNeighborhood();
+            this.city = address.getCity();
+            this.state = address.getState();
+            this.cep = address.getCep();
+            this.country = address.getCountry();
+        }
     }
 }

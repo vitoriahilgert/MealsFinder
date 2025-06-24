@@ -1,23 +1,22 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Column;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
+import br.edu.ufscar.backend.mealsfinder.framework.retentions.Collection;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.*;
 
-@Entity
-@Table(name = "comments")
-@DiscriminatorValue("COMMENT")
+@Entity(tableName = "comments")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Comment extends Content {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @Column(name = "post_id")
     private Post post;
 
     public Comment(User creator, String text, Post post) {
