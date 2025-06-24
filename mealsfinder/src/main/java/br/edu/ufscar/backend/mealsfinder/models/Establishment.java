@@ -4,117 +4,130 @@ import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.ImageType;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-@Entity(name = "establishment")
+@Entity
+@Table(name = "establishments")
+@DiscriminatorValue("ESTABLISHMENT")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Establishment extends User {
-    @Column(nullable = false, name = "cnpj")
+
+    @Column(nullable = false, unique = true)
     private String cnpj;
 
-    @Column(nullable = false, name = "type")
-    @Enumerated(EnumType.ORDINAL)
-    private EstablishmentTypesEnum type;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EstablishmentTypesEnum establishmentType;
 
-    @Column(nullable = false, name = "is_delivery")
-    private boolean isDelivery;
+    @Column(name = "is_delivery", nullable = false)
+    private boolean isDelivery = false;
 
-    @Column(nullable = false, name = "is_in_person")
-    private boolean isInPerson;
+    @Column(name = "is_in_person", nullable = false)
+    private boolean isInPerson = true;
 
-    @Column(nullable = false, name = "status")
-    private StatusEnum status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status = StatusEnum.PENDING;
 
     @Embedded
     private Address address;
 
-    @Column(name = "rejections")
-    private int rejections;
+    @Column(nullable = false)
+    private int rejections = 0;
 
     @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Post> posts = new ArrayList<>();
+    private Set<Image> images = new HashSet<>();
 
-    public Establishment() {
+    @OneToMany(mappedBy = "reviewedPost", cascade = CascadeType.ALL)
+    private Set<Review> receivedReviews = new HashSet<>();
+
+    public Establishment(String email, String username, String password, String cnpj, EstablishmentTypesEnum establishmentType) {
+        super(email, username, password);
+        this.cnpj = cnpj;
+        this.establishmentType = establishmentType;
     }
 
-    public List<Image> getMenuUrls() {
+    @Override
+    public String getUserType() {
+        return "ESTABLISHMENT";
+    }
+
+    public Set<Image> getMenuImages() {
         return this.images.stream()
                 .filter(image -> image.getType() == ImageType.MENU)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    public List<Image> getEstablishmentPicturesUrls() {
+    public Set<Image> getEstablishmentImages() {
         return this.images.stream()
                 .filter(image -> image.getType() == ImageType.ESTABLISHMENT_PICTURE)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    public String getCnpj() {
-        return cnpj;
+    public boolean addImage(Image image) {
+        image.setEstablishment(this);
+        return this.images.add(image);
     }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+    public boolean removeImage(Image image) {
+        boolean removed = this.images.remove(image);
+        if (removed) {
+            image.setEstablishment(null);
+        }
+        return removed;
     }
 
-    public EstablishmentTypesEnum getType() {
-        return type;
+    public double getAverageRating() {
+        return this.receivedReviews.stream()
+                .mapToDouble(Review::getOverallDetailedRating)
+                .average()
+                .orElse(0.0);
     }
 
-    public void setType(EstablishmentTypesEnum type) {
-        this.type = type;
+    public int getReviewCount() {
+        return this.receivedReviews.size();
     }
 
-    public boolean isDelivery() {
-        return isDelivery;
+    public boolean isApproved() {
+        return this.status == StatusEnum.APPROVED;
     }
 
-    public void setDelivery(boolean delivery) {
-        isDelivery = delivery;
+    public boolean isPending() {
+        return this.status == StatusEnum.PENDING;
     }
 
-    public boolean isInPerson() {
-        return isInPerson;
+    public boolean isRejected() {
+        return this.status == StatusEnum.REJECTED;
     }
 
-    public void setInPerson(boolean inPerson) {
-        isInPerson = inPerson;
+    public void approve() {
+        this.status = StatusEnum.APPROVED;
     }
 
-    public StatusEnum getStatus() {
-        return status;
+    public void reject() {
+        this.status = StatusEnum.REJECTED;
+        this.rejections++;
     }
 
-    public void setStatus(StatusEnum status) {
-        this.status = status;
+    public void resetToPending() {
+        this.status = StatusEnum.PENDING;
     }
 
-    public Address getAddress() {
-        return address;
+    public boolean supportsDelivery() {
+        return this.isDelivery;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public int getRejections() {
-        return rejections;
-    }
-
-    public void setRejections(int rejections) {
-        this.rejections = rejections;
-    }
-
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images;
+    public boolean supportsInPerson() {
+        return this.isInPerson;
     }
 }

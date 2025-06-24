@@ -1,75 +1,69 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity(tableName = "client")
-@jakarta.persistence.Entity
+@Entity(tableName = "clients")
+@Table(name = "clients")
+@DiscriminatorValue("CLIENT")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client extends User {
-    // private List<FoodTypesEnum> likes;
-    // private List<FoodTypesEnum> dislikes;
 
-//    @OneToMany(mappedBy = "client")
-//    private List<User> following = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "client")
-//    private List<User> blockList = new ArrayList<>();
-//
-//    @ManyToMany(mappedBy = "client")
-//    private List<Post> savedPosts = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "client")
-//    private List<Review> reviews = new ArrayList<>();
+    @ElementCollection(targetClass = FoodTypesEnum.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "client_food_likes", joinColumns = @JoinColumn(name = "client_id"))
+    @Column(name = "food_type")
+    private Set<FoodTypesEnum> foodLikes = new HashSet<>();
 
-//    public List<FoodTypesEnum> getLikes() {
-//        return likes;
-//    }
-//
-//    public void setLikes(List<FoodTypesEnum> likes) {
-//        this.likes = likes;
-//    }
-//
-//    public List<FoodTypesEnum> getDislikes() {
-//        return dislikes;
-//    }
-//
-//    public void setDislikes(List<FoodTypesEnum> dislikes) {
-//        this.dislikes = dislikes;
-//    }
+    @ElementCollection(targetClass = FoodTypesEnum.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "client_food_dislikes", joinColumns = @JoinColumn(name = "client_id"))
+    @Column(name = "food_type")
+    private Set<FoodTypesEnum> foodDislikes = new HashSet<>();
 
-//    public List<User> getFollowing() {
-//        return following;
-//    }
-//
-//    public void setFollowing(List<User> following) {
-//        this.following = following;
-//    }
-//
-//    public List<User> getBlockList() {
-//        return blockList;
-//    }
-//
-//    public void setBlockList(List<User> blockList) {
-//        this.blockList = blockList;
-//    }
+    public Client(String email, String username, String password) {
+        super(email, username, password);
+    }
 
-//    public List<Post> getSavedPosts() {
-//        return savedPosts;
-//    }
-//
-//    public void setSavedPosts(List<Post> savedPosts) {
-//        this.savedPosts = savedPosts;
-//    }
-//
-//    public List<Review> getReviews() {
-//        return reviews;
-//    }
-//
-//    public void setReviews(List<Review> reviews) {
-//        this.reviews = reviews;
-//    }
+    @Override
+    public String getUserType() {
+        return "CLIENT";
+    }
+
+    public boolean addFoodLike(FoodTypesEnum foodType) {
+        this.foodDislikes.remove(foodType);
+        return this.foodLikes.add(foodType);
+    }
+
+    public boolean removeFoodLike(FoodTypesEnum foodType) {
+        return this.foodLikes.remove(foodType);
+    }
+
+    public boolean addFoodDislike(FoodTypesEnum foodType) {
+        this.foodLikes.remove(foodType);
+        return this.foodDislikes.add(foodType);
+    }
+
+    public boolean removeFoodDislike(FoodTypesEnum foodType) {
+        return this.foodDislikes.remove(foodType);
+    }
+
+    public boolean likesFoodType(FoodTypesEnum foodType) {
+        return this.foodLikes.contains(foodType);
+    }
+
+    public boolean dislikesFoodType(FoodTypesEnum foodType) {
+        return this.foodDislikes.contains(foodType);
+    }
 }

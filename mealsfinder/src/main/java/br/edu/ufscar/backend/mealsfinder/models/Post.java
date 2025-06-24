@@ -8,48 +8,64 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
-class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+@Table(name = "posts")
+@DiscriminatorValue("POST")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Post extends Content {
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-//    @OneToMany(mappedBy = "post")
-//    private List<User> likedBy = new ArrayList<>();
+    @ElementCollection(targetClass = EstablishmentTagsEnum.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "post_establishment_tags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "tag")
+    private Set<EstablishmentTagsEnum> establishmentTags = new HashSet<>();
 
-//    @OneToMany(mappedBy = "post")
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user;
+    @ElementCollection(targetClass = FoodTypesEnum.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "post_food_tags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "tag")
+    private Set<FoodTypesEnum> foodTags = new HashSet<>();
 
-//    private List<EstablishmentTagsEnum> establishmentTags = new ArrayList<>();
-//    private List<FoodTypesEnum> foodTags = new ArrayList<>();
-//    private List<String> pictureUrls = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "post_pictures", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "picture_url")
+    private Set<String> pictureUrls = new HashSet<>();
 
-    public Post() {
-    }
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments = new HashSet<>();
 
-    public UUID getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "reviewedPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+    public Post(User creator, String text, String description) {
+        super(creator, text);
         this.description = description;
+    }
+
+    @Override
+    public String getContentType() {
+        return "POST";
+    }
+
+    public int getCommentCount() {
+        return this.comments.size();
+    }
+
+    public int getReviewCount() {
+        return this.reviews.size();
+    }
+
+    public double getAverageRating() {
+        return this.reviews.stream()
+                .mapToDouble(Review::getOverallDetailedRating)
+                .average()
+                .orElse(0.0);
     }
 }

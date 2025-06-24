@@ -1,7 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder;
 
 import br.edu.ufscar.backend.mealsfinder.framework.PersistenceFramework;
-import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
 import br.edu.ufscar.backend.mealsfinder.models.Establishment;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
@@ -86,7 +85,7 @@ public class MealsFinderApplication {
 			Establishment establishment = new Establishment();
 			establishment.setCnpj("79.536.761/0001-12");
 			establishment.setDelivery(true);
-			establishment.setType(EstablishmentTypesEnum.A);
+			establishment.setEstablishmentType(EstablishmentTypesEnum.Lanchonete);
 			establishment.setStatus(StatusEnum.OPEN);
 			establishment.setRejections(0);
 			establishment.setInPerson(true);
@@ -99,5 +98,4 @@ public class MealsFinderApplication {
 
 		};
 	}
-
 }

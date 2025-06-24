@@ -1,109 +1,98 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-abstract class Content {
+@Entity
+@Table(name = "content")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "content_type", discriminatorType = DiscriminatorType.STRING)
+@Getter
+@Setter
+@NoArgsConstructor
+public abstract class Content {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(columnDefinition = "TEXT")
     private String text;
-    private List<UUID> likes;
-    private UUID creatorId;
+
+    @ManyToMany
+    @JoinTable(
+            name = "content_likes",
+            joinColumns = @JoinColumn(name = "content_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> likes = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User creator;
+
+    @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
+
+    @Column(name = "last_modified_date", nullable = false)
     private LocalDateTime lastModifiedDate;
 
-    public Content() {
-        this.id = UUID.randomUUID();
-        this.likes = new ArrayList<>();
+    @ManyToMany(mappedBy = "savedContent")
+    private Set<User> savedByUsers = new HashSet<>();
+
+    public Content(User creator, String text) {
+        this.creator = creator;
+        this.text = text;
         this.creationDate = LocalDateTime.now();
         this.lastModifiedDate = this.creationDate;
     }
 
-    public Content(UUID creatorId, String text) {
-        this();
-        this.creatorId = creatorId;
-        this.text = text;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    @PreUpdate
+    public void preUpdate() {
         this.lastModifiedDate = LocalDateTime.now();
     }
 
-    public List<UUID> getLikes() {
-        return likes;
+    public boolean addLike(User user) {
+        return this.likes.add(user);
     }
 
-    public void setLikes(List<UUID> likes) {
-        this.likes = likes;
+    public boolean removeLike(User user) {
+        return this.likes.remove(user);
     }
-    
+
+    public boolean isLikedBy(User user) {
+        return this.likes.contains(user);
+    }
+
     public int getLikeCount() {
-        return likes.size();
+        return this.likes.size();
     }
 
-    public UUID getCreatorId() {
-        return creatorId;
+    public boolean isSavedBy(User user) {
+        return this.savedByUsers.contains(user);
     }
 
-    public void setCreatorId(UUID creatorId) {
-        this.creatorId = creatorId;
-    }
-    
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-    
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-    
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-    
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-    
-    public boolean addLike(UUID userId) {
-        if (!likes.contains(userId)) {
-            likes.add(userId);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean removeLike(UUID userId) {
-        return likes.remove(userId);
-    }
-
-    public boolean isLikedBy(UUID userId) {
-        return likes.contains(userId);
+    public int getSavedCount() {
+        return this.savedByUsers.size();
     }
 
     public abstract String getContentType();
-    
+
     @Override
     public String toString() {
         return "Content{" +
                 "id=" + id +
-                ", creatorId=" + creatorId +
+                ", creator=" + (creator != null ? creator.getId() : "null") +
                 ", likes=" + getLikeCount() +
                 ", created=" + creationDate +
+                ", type=" + getContentType() +
                 '}';
     }
 }

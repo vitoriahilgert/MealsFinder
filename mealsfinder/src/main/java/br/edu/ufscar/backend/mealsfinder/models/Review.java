@@ -1,9 +1,23 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTagsEnum;
+import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTypesEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.*;
 
 @Entity
-class Review extends Post {
+@Table(name = "reviews")
+@DiscriminatorValue("REVIEW")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Review extends Post {
+
     @Column(nullable = false)
     private Double price;
 
@@ -22,54 +36,47 @@ class Review extends Post {
     @Column
     private Double deliveryRating;
 
-    public Review() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_post_id")
+    private Post reviewedPost;
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
+    public Review(User creator, String text, String description, Double price, Double rating, boolean isDelivery) {
+        super(creator, text, description);
         this.price = price;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
         this.rating = rating;
+        this.isDelivery = isDelivery;
     }
 
-    public boolean isDelivery() {
-        return isDelivery;
+    @Override
+    public String getContentType() {
+        return "REVIEW";
     }
 
-    public void setDelivery(boolean delivery) {
-        isDelivery = delivery;
+    public boolean isValidRating() {
+        return rating != null && rating >= 0.0 && rating <= 5.0;
     }
 
-    public Double getEstablishmentRating() {
-        return establishmentRating;
+    public boolean hasDetailedRatings() {
+        return establishmentRating != null || serviceRating != null || deliveryRating != null;
     }
 
-    public void setEstablishmentRating(Double establishmentRating) {
-        this.establishmentRating = establishmentRating;
-    }
+    public double getOverallDetailedRating() {
+        double sum = 0.0;
+        int count = 0;
 
-    public Double getServiceRating() {
-        return serviceRating;
-    }
+        if (establishmentRating != null) {
+            sum += establishmentRating;
+            count++;
+        }
+        if (serviceRating != null) {
+            sum += serviceRating;
+            count++;
+        }
+        if (deliveryRating != null && isDelivery) {
+            sum += deliveryRating;
+            count++;
+        }
 
-    public void setServiceRating(Double serviceRating) {
-        this.serviceRating = serviceRating;
-    }
-
-    public Double getDeliveryRating() {
-        return deliveryRating;
-    }
-
-    public void setDeliveryRating(Double deliveryRating) {
-        this.deliveryRating = deliveryRating;
+        return count > 0 ? sum / count : 0.0;
     }
 }

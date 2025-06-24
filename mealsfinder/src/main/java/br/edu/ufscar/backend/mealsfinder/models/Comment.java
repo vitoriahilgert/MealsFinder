@@ -6,38 +6,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
-class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+@Table(name = "comments")
+@DiscriminatorValue("COMMENT")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Comment extends Content {
 
-//    @Column(nullable = false)
-//    private UUID postId;
-//
-//    @Column
-//    private UUID parentCommentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-    //private List<UUID> childCommentIds;
-
-
-    public Comment() {
+    public Comment(User creator, String text, Post post) {
+        super(creator, text);
+        this.post = post;
     }
 
-    public Comment(UUID id) {
-        this.id = id;
+    public Comment(User creator, String text, Post post, Comment parentComment) {
+        super(creator, text);
+        this.post = post;
     }
 
-    public UUID getId() {
-        return id;
+    @Override
+    public String getContentType() {
+        return "COMMENT";
     }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
 }
