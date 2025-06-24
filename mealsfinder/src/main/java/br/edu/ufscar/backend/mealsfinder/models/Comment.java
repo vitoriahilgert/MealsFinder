@@ -1,9 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,15 +11,33 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
 class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID postId;
-    private UUID parentCommentId;
-    private List<UUID> childCommentIds;
+
+//    @Column(nullable = false)
+//    private UUID postId;
+//
+//    @Column
+//    private UUID parentCommentId;
+
+    //private List<UUID> childCommentIds;
+
+
+    public Comment() {
+    }
+
+    public Comment(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
 }

@@ -1,25 +1,50 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 class Address {
-    private String CEP;
+    @Column(name = "cep")
+    private String cep;
+    @Column(name = "city")
     private String city;
+    @Column(name = "state")
     private String state;
+    @Column(name = "street")
     private String street;
+    @Column(name = "number")
     private String number;
+    @Column(name = "neighborhood")
     private String neighborhood;
+    @Column(name = "country")
     private String country;
 
     public Address() {
     }
 
-    public Address(String CEP, String city, String state, String street, String number, String neighborhood, String country) {
-        this.CEP = CEP;
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
         this.state = state;
-        this.street = street;
-        this.number = number;
-        this.neighborhood = neighborhood;
-        this.country = country;
     }
 
     public String getStreet() {
@@ -44,30 +69,6 @@ class Address {
 
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCEP() {
-        return CEP;
-    }
-
-    public void setCEP(String CEP) {
-        this.CEP = CEP;
     }
 
     public String getCountry() {
