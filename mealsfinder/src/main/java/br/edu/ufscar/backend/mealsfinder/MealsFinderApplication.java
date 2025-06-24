@@ -132,6 +132,9 @@ public class MealsFinderApplication {
 			maria.addFoodLike(FoodTypesEnum.SAUDAVEL);
 			maria.addFoodDislike(FoodTypesEnum.FAST_FOOD);
 
+			maria.followUser(pizzaria);
+			maria.followUser(client);
+
 			maria.prepareForDatabase();
 
 			try {
@@ -148,13 +151,13 @@ public class MealsFinderApplication {
 
 	private static String CreateTableString() {
 		return "-- Create tables for MealsFinder application - SQLite version\n" +
-				"-- Creating separate tables to match @Entity annotations\n" +
+				"-- User superclass has NO @Entity annotation, so no users table needed\n" +
+				"-- Framework will insert directly into clients/establishments tables\n" +
 				"-- SQLite doesn't have UUID type, using TEXT for IDs\n" +
 				"-- All fields allow NULL except essential ones, with sensible defaults\n" +
-				"-- NO users table - only clients and establishments with inherited User fields\n" +
 				"\n" +
 				"-- Clients table (matches @Entity(tableName = \"clients\"))\n" +
-				"-- Contains all User fields + Client-specific fields\n" +
+				"-- Contains all User inherited fields + Client-specific fields\n" +
 				"CREATE TABLE IF NOT EXISTS clients (\n" +
 				"    id TEXT PRIMARY KEY,\n" +
 				"    \n" +
@@ -185,7 +188,7 @@ public class MealsFinderApplication {
 				");\n" +
 				"\n" +
 				"-- Establishments table (matches @Entity(tableName = \"establishments\"))\n" +
-				"-- Contains all User fields + Establishment-specific fields\n" +
+				"-- Contains all User inherited fields + Establishment-specific fields\n" +
 				"CREATE TABLE IF NOT EXISTS establishments (\n" +
 				"    id TEXT PRIMARY KEY,\n" +
 				"    \n" +
@@ -201,7 +204,7 @@ public class MealsFinderApplication {
 				"    creation_date TEXT DEFAULT CURRENT_TIMESTAMP,\n" +
 				"    last_modified_date TEXT DEFAULT CURRENT_TIMESTAMP,\n" +
 				"    \n" +
-				"    -- Establishment-specific fields  \n" +
+				"    -- Establishment-specific fields\n" +
 				"    cnpj TEXT,\n" +
 				"    establishment_type TEXT,\n" +
 				"    is_delivery INTEGER DEFAULT 0,\n" +
@@ -229,6 +232,21 @@ public class MealsFinderApplication {
 				"    -- Establishment @Collection fields stored as text\n" +
 				"    image_ids TEXT DEFAULT '',\n" +
 				"    received_review_ids TEXT DEFAULT ''\n" +
+				");\n" +
+				"\n" +
+				"-- Content table (matches @Entity(tableName = \"content\"))\n" +
+				"-- Base table for content hierarchy\n" +
+				"CREATE TABLE IF NOT EXISTS content (\n" +
+				"    id TEXT PRIMARY KEY,\n" +
+				"    \n" +
+				"    -- Content base fields\n" +
+				"    text TEXT,\n" +
+				"    creator_id TEXT,\n" +
+				"    creation_date TEXT DEFAULT CURRENT_TIMESTAMP,\n" +
+				"    last_modified_date TEXT DEFAULT CURRENT_TIMESTAMP,\n" +
+				"    \n" +
+				"    -- Content @Collection fields stored as text\n" +
+				"    liked_by_ids TEXT DEFAULT ''\n" +
 				");\n" +
 				"\n" +
 				"-- Posts table (matches @Entity(tableName = \"posts\"))\n" +

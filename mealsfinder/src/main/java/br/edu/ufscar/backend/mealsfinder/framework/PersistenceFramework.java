@@ -41,10 +41,13 @@ public class PersistenceFramework {
         System.out.println("Inserido com sucesso na classe " + clazz.getSimpleName());
     }
 
-    private List<String> getColumnNames(Field[] fields) {
+    private List<String> getColumnNames(Class<?> clazz) {
         List<String> columnNames = new ArrayList<>();
 
-        for (Field field : fields) {
+        // Get all fields from current class and parent classes
+        List<Field> allFields = getAllFields(clazz);
+
+        for (Field field : allFields) {
             field.setAccessible(true);
 
             if (field.isAnnotationPresent(Column.class)) {
@@ -78,8 +81,8 @@ public class PersistenceFramework {
             tableName = clazz.getSimpleName().toLowerCase();
         }
 
-        Field[] fields = clazz.getDeclaredFields();
-        List<String> columnsList = this.getColumnNames(fields);
+        // Use the class directly, not getDeclaredFields()
+        List<String> columnsList = this.getColumnNames(clazz);
         String columns = String.join(", ", columnsList);
 
         StringBuilder sql = (clazz.getSuperclass() == null || !clazz.getSuperclass().isAnnotationPresent(Entity.class)) ?
@@ -100,8 +103,7 @@ public class PersistenceFramework {
     }
 
     private <T> void insertSQL(T entity, Class<?> targetClass, String sql, Connection connection) throws Exception {
-        Field[] fields = targetClass.getDeclaredFields();
-        List<String> columnsList = this.getColumnNames(fields);
+        List<Field> allFields = getAllFields(targetClass);
 
         PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -113,7 +115,7 @@ public class PersistenceFramework {
         }
 
         // Process each field
-        for (Field field : fields) {
+        for (Field field : allFields) {
             field.setAccessible(true);
 
             if (field.isAnnotationPresent(Column.class) || field.isAnnotationPresent(Collection.class)) {
@@ -187,6 +189,18 @@ public class PersistenceFramework {
         } catch (NoSuchMethodException e) {
             throw new Exception("Entity " + clazz.getSimpleName() + " must have either an 'id' field or 'getId()' method");
         }
+    }
+
+    private List<Field> getAllFields(Class<?> clazz) {
+        List<Field> allFields = new ArrayList<>();
+
+        // Get fields from current class and all parent classes
+        while (clazz != null) {
+            allFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            clazz = clazz.getSuperclass();
+        }
+
+        return allFields;
     }
 
     /**
