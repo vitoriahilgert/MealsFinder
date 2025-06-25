@@ -3,7 +3,7 @@ package br.edu.ufscar.backend.mealsfinder.models;
 import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 
 @Entity(name = "reviews")
-class Review extends Post {
+public class Review extends Post {
     @Column(name = "price")
     private Double price;
 

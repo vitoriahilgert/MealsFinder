@@ -1,20 +1,20 @@
 package br.edu.ufscar.backend.mealsfinder;
 
 import br.edu.ufscar.backend.mealsfinder.framework.PersistenceFramework;
-import br.edu.ufscar.backend.mealsfinder.framework.retentions.Entity;
 import br.edu.ufscar.backend.mealsfinder.models.Address;
 import br.edu.ufscar.backend.mealsfinder.models.Establishment;
+import br.edu.ufscar.backend.mealsfinder.models.Post;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 import br.edu.ufscar.backend.mealsfinder.models.enums.UserRoleEnum;
-import org.hibernate.type.descriptor.jdbc.SmallIntJdbcType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.context.annotation.Bean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @SpringBootApplication
 public class MealsFinderApplication {
@@ -74,6 +74,18 @@ public class MealsFinderApplication {
 
 				stmt.executeUpdate(createEstablishmentTableSQL);
 				System.out.println("Tabela establishments criada ou já existente.");
+
+				String createPostTableSQL = "CREATE TABLE IF NOT EXISTS posts" +
+						"(" +
+						"    id          TEXT PRIMARY KEY, " +
+						"    user_id     TEXT NOT NULL, " +
+						"    description TEXT, " +
+						"    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+						"    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE" +
+						");";
+
+				stmt.executeUpdate(createPostTableSQL);
+				System.out.println("Tabela posts criada ou já existente");
 			}
 
 		} catch (SQLException e) {
@@ -91,31 +103,43 @@ public class MealsFinderApplication {
 
 			persistenceFramework.setDBAbsolutePath("jdbc:sqlite:mealsfinder.db");
 
-			Establishment establishment = new Establishment();
-			establishment.setCnpj("79.536.761/0001-12");
-			establishment.setDelivery(true);
-			establishment.setType(EstablishmentTypesEnum.A);
-			establishment.setStatus(StatusEnum.OPEN);
-			establishment.setRejections((short) 0);
-			establishment.setInPerson(true);
-			establishment.setEmail("manapoke@gmail.com");
-			establishment.setPassword("password");
-			establishment.setPhoneNumber("(16) 98183-5500");
-			establishment.setUsername("manapoke");
-			establishment.setRole(UserRoleEnum.ESTABLISHMENT);
+//			Establishment establishment = new Establishment();
+//			establishment.setCnpj("79.536.761/0001-12");
+//			establishment.setDelivery(true);
+//			establishment.setType(EstablishmentTypesEnum.A);
+//			establishment.setStatus(StatusEnum.OPEN);
+//			establishment.setRejections((short) 0);
+//			establishment.setInPerson(true);
+//			establishment.setEmail("manapoke@gmail.com");
+//			establishment.setPassword("password");
+//			establishment.setPhoneNumber("(16) 98183-5500");
+//			establishment.setUsername("manapoke");
+//			establishment.setRole(UserRoleEnum.ESTABLISHMENT);
+//
+//			Address address = new Address();
+//			address.setCep("13574-290");
+//			address.setCity("São Carlos");
+//			address.setState("SP");
+//			address.setNeighborhood("Vila Prado");
+//			address.setCountry("Brasil");
+//			address.setNumber("568");
+//			address.setStreet("Rua Antonio de Almeida Leite");
+//
+//			establishment.setAddress(address);
+//
+//			persistenceFramework.save(establishment);
 
-			Address address = new Address();
-			address.setCep("13574-290");
-			address.setCity("São Carlos");
-			address.setState("SP");
-			address.setNeighborhood("Vila Prado");
-			address.setCountry("Brasil");
-			address.setNumber("568");
-			address.setStreet("Rua Antonio de Almeida Leite");
+			Post post = new Post();
+			post.setDescription("Post de teste");
+			post.setUserId(UUID.fromString("92fa7bbd-e349-4b8b-8f76-2359ef1435c8"));
+			post.setCreatedAt(LocalDateTime.now());
 
-			establishment.setAddress(address);
+			//persistenceFramework.save(post);
 
-			persistenceFramework.insert(establishment);
+			post.setId(UUID.fromString("4e3f5344-fbf2-43cf-b9fc-73b5c294c4e2"));
+
+			boolean postExists = persistenceFramework.existsById(post);
+			System.out.println("Post existe: " + postExists);
 
 		};
 	}

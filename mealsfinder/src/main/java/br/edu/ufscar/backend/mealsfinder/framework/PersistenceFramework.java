@@ -1,14 +1,12 @@
 package br.edu.ufscar.backend.mealsfinder.framework;
 
 import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.yaml.snakeyaml.util.Tuple;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 
 public class PersistenceFramework {
@@ -18,7 +16,37 @@ public class PersistenceFramework {
         this.databasePath = dbAbsolutePath;
     }
 
-    public <T> void insert(T entity) throws Exception {
+    public <T> boolean existsById(T entity) throws Exception {
+        Class<?> clazz = entity.getClass();
+
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new Exception("A classe não é uma entidade JPA.");
+        }
+
+        String entityName = clazz.getAnnotation(Entity.class).name();
+
+        Field primaryKeyField = this.getPrimaryKeyField(clazz);
+        primaryKeyField.setAccessible(true);
+
+        String primaryKeyName = primaryKeyField.getName();
+
+        String sql = "SELECT * FROM " + entityName + " WHERE " + primaryKeyName + " = ?;";
+
+        try (Connection connection = DriverManager.getConnection(databasePath)) {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            Object value = primaryKeyField.get(entity);
+            statement.setObject(1, value);
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public <T> void save(T entity) throws Exception {
         Class<?> clazz = entity.getClass();
 
         if (!clazz.isAnnotationPresent(Entity.class)) {
@@ -28,17 +56,7 @@ public class PersistenceFramework {
         UUID entityId = UUID.randomUUID();
 
         try (Connection conn = DriverManager.getConnection(databasePath)) {
-            if (clazz.getSuperclass() != null && clazz.getSuperclass().isAnnotationPresent(Entity.class)) {
-                // Inserir primeiro na superclass
-
-                this.insertSQL(entity, clazz.getSuperclass(), conn, entityId);
-
-                System.out.println("Inserido com sucesso na classe " + clazz.getSuperclass().getSimpleName());
-            }
-
-            this.insertSQL(entity, clazz, conn, entityId);
-
-            System.out.println("Inserido com sucesso na classe " + clazz.getSuperclass().getSimpleName());
+            this.insert(entity, clazz, conn, entityId);
         }
     }
 
@@ -125,7 +143,12 @@ public class PersistenceFramework {
         return sql.toString();
     }
 
-    private <T> void insertSQL(T entity, Class<?> clazz, Connection connection, UUID entityId) throws Exception {
+    private <T> void insert(T entity, Class<?> clazz, Connection connection, UUID entityId) throws Exception {
+        boolean hasParentEntity = clazz.getSuperclass().isAnnotationPresent(Entity.class);
+
+        if (hasParentEntity) {
+            insert(entity, clazz.getSuperclass(), connection, entityId);
+        }
 
         String sql = this.buildInsertSQL(clazz);
 
@@ -138,7 +161,6 @@ public class PersistenceFramework {
         PreparedStatement statement = connection.prepareStatement(sql);
         int parameterIndex = 1;
 
-        boolean hasParentEntity = clazz.getSuperclass().isAnnotationPresent(Entity.class);
         if (hasParentEntity) {
             statement.setObject(1, entityId);
             parameterIndex++;
@@ -148,6 +170,23 @@ public class PersistenceFramework {
         }
 
         statement.executeUpdate();
+
+        System.out.println("Inserido com sucesso na tabela " + clazz.getAnnotation(Entity.class).name());
+    }
+
+    private Field getPrimaryKeyField(Class<?> clazz) throws Exception {
+        Field[] fields = clazz.getDeclaredFields();
+
+        Optional<Field> optPrimaryKeyField = Arrays.stream(fields)
+                .filter(field -> field.isAnnotationPresent(Id.class) &&
+                        field.isAnnotationPresent(Column.class))
+                .findFirst();
+
+        if (optPrimaryKeyField.isEmpty()) {
+            throw new Exception("Id não encontrado.");
+        }
+
+        return optPrimaryKeyField.get();
     }
 
 }

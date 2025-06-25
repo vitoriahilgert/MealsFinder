@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity(name = "users")
 public abstract class User extends PersistenceFramework {
     @Column(name = "id")
+    @Id
     private UUID id;
 
     @Column(name = "email")

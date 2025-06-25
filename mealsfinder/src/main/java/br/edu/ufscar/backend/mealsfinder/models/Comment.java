@@ -4,7 +4,7 @@ import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
 import java.util.UUID;
 
 @Entity(name = "comment")
-class Comment {
+public class Comment {
     @Column(name = "id")
     private UUID id;
 
