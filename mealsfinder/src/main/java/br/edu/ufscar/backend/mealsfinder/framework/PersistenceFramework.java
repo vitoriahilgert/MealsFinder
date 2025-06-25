@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
 
 public class PersistenceFramework {
@@ -46,7 +47,7 @@ public class PersistenceFramework {
         }
     }
 
-    public <T> void save(T entity) throws Exception {
+    public <T> UUID save(T entity) throws Exception {
         Class<?> clazz = entity.getClass();
 
         if (!clazz.isAnnotationPresent(Entity.class)) {
@@ -58,6 +59,7 @@ public class PersistenceFramework {
         try (Connection conn = DriverManager.getConnection(databasePath)) {
             this.insert(entity, clazz, conn, entityId);
         }
+        return entityId;
     }
 
     private List<String> getColumnNames(Field[] fields) {
@@ -187,6 +189,124 @@ public class PersistenceFramework {
         }
 
         return optPrimaryKeyField.get();
+    }
+
+
+    // findByPrimaryKey e related methods:
+    public <T, ID> Optional<T> findByPrimaryKey(Class<T> clazz, ID id) throws Exception {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new Exception("A classe não é uma entidade JPA.");
+        }
+
+        String sql = buildSelectSQL(clazz);
+        try (Connection conn = DriverManager.getConnection(databasePath);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    T instance = clazz.getDeclaredConstructor().newInstance();
+                    populateObjectFromResultSet(instance, clazz, rs);
+                    return Optional.of(instance);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private <T> void populateObjectFromResultSet(T instance, Class<?> clazz, ResultSet rs) throws Exception {
+        if (clazz.getSuperclass() != null && clazz.getSuperclass().isAnnotationPresent(Entity.class)) {
+            populateObjectFromResultSet(instance, clazz.getSuperclass(), rs);
+        }
+
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.isAnnotationPresent(Column.class)) {
+                Column column = field.getAnnotation(Column.class);
+                Object value;
+                try {
+                    value = rs.getObject(column.name());
+                } catch (SQLException e) {
+                    continue;
+                }
+
+                if (value == null) {
+                    continue;
+                }
+
+                if (field.getType().isEnum()) {
+                    if (value instanceof Number) {
+                        int ordinal = ((Number) value).intValue();
+                        Object[] enumConstants = field.getType().getEnumConstants();
+                        if (ordinal >= 0 && ordinal < enumConstants.length) {
+                            field.set(instance, enumConstants[ordinal]);
+                        }
+                    } else if (value instanceof String) {
+                        field.set(instance, Enum.valueOf((Class<Enum>) field.getType(), (String) value));
+                    }
+                } else if (value instanceof Number) {
+                    Number numValue = (Number) value;
+                    Class<?> fieldType = field.getType();
+                    if (fieldType.equals(Long.class) || fieldType.equals(long.class)) {
+                        field.set(instance, numValue.longValue());
+                    } else if (fieldType.equals(Integer.class) || fieldType.equals(int.class)) {
+                        field.set(instance, numValue.intValue());
+                    } else if (fieldType.equals(Double.class) || fieldType.equals(double.class)) {
+                        field.set(instance, numValue.doubleValue());
+                    } else if (fieldType.equals(Short.class) || fieldType.equals(short.class)) {
+                        field.set(instance, numValue.shortValue());
+                    } else if (fieldType.equals(Float.class) || fieldType.equals(float.class)) {
+                        field.set(instance, numValue.floatValue());
+                    } else if (fieldType.equals(Byte.class) || fieldType.equals(byte.class)) {
+                        field.set(instance, numValue.byteValue());
+                    } else if (fieldType.equals(Boolean.class) || fieldType.equals(boolean.class)) {
+                        field.set(instance, numValue.intValue() != 0);
+                    } else {
+                        field.set(instance, value);
+                    }
+                } else if (value instanceof String && field.getType().equals(UUID.class)) {
+                    field.set(instance, UUID.fromString((String) value));
+                } else {
+                    field.set(instance, value);
+                }
+
+            } else if (field.isAnnotationPresent(Embedded.class)) {
+                Object embeddedInstance = field.getType().getDeclaredConstructor().newInstance();
+                populateObjectFromResultSet(embeddedInstance, field.getType(), rs);
+                field.set(instance, embeddedInstance);
+            }
+        }
+    }
+
+    private String buildSelectSQL(Class<?> clazz) throws Exception {
+        Entity entityAnnotation = clazz.getAnnotation(Entity.class);
+
+        String mainTable = entityAnnotation.name();
+        Class<?> superclass = clazz.getSuperclass();
+
+        if (superclass != null && superclass.isAnnotationPresent(Entity.class)) {
+            // Pega a coluna com a chave primaria na classe pai
+            String superTable = superclass.getAnnotation(Entity.class).name();
+            String superTablePkName = getPrimaryKeyColumnName(superclass);
+            return String.format("SELECT * FROM %s t1 JOIN %s t2 ON t1.user_id = t2.%s WHERE t2.%s = ?",
+                    mainTable, superTable, superTablePkName, superTablePkName);
+        } else {
+            // Se não herda nenhuma classe apenas pega a coluna com a chave primaria
+            String pkColumnName = getPrimaryKeyColumnName(clazz);
+            return String.format("SELECT * FROM %s WHERE %s = ?", mainTable, pkColumnName);
+        }
+    }
+
+    private String getPrimaryKeyColumnName(Class<?> clazz) throws Exception {
+        Class<?> currentClass = clazz;
+        while (currentClass != null) {
+            for (Field field : currentClass.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Id.class)) {
+                    return field.getAnnotation(Column.class).name();
+                }
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        throw new Exception("Nenhum campo com @Id encontrado na entidade " + clazz.getSimpleName());
     }
 
 }
