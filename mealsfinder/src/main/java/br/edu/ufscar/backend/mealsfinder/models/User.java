@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Entity(name = "users")
 public abstract class User extends PersistenceFramework {
-    @Id
     @Column(name = "id")
+    @Id
     private UUID id;
 
     @Column(name = "email")
