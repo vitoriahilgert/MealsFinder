@@ -189,20 +189,20 @@ public class MealsFinderApplication {
 			PersistenceFramework framework = new PersistenceFramework();
 			framework.setDBAbsolutePath("jdbc:sqlite:mealsfinder.db");
 
-//			// --- Teste 1: Establishment (UUID PK) ---
-//			System.out.println("\n--- TESTE 1: Entidade com chave UUID ---");
-//			testEstablishment(framework);
-//
-//			// --- Teste 2: Product (Long PK) ---
-//			System.out.println("\n--- TESTE 2: Entidade com chave Long ---");
-//			testProduct(framework);
-//
+			// --- Teste 1: Establishment (UUID PK) ---
+			System.out.println("\n--- TESTE 1: Entidade com chave UUID ---");
+			testEstablishment(framework);
+
+			// --- Teste 2: Product (Long PK) ---
+			System.out.println("\n--- TESTE 2: Entidade com chave Long ---");
+			testProduct(framework);
+
 			// --- Teste 3: Exists
 			System.out.println("\n--- TESTE 3: Teste Exists ---");
 			testExists(framework);
 
-			// --- Teste 3: Find all---
-			System.out.println("\n--- TESTE 3: Testando findAll para Establishment ---");
+			// --- Teste 4: Find all---
+			System.out.println("\n--- TESTE 4: Testando findAll para Establishment ---");
 			testEstablishmentAndFindAll(framework);
 
 			System.out.println("\n--- TESTE DO FRAMEWORK FINALIZADO ---");
@@ -347,8 +347,8 @@ public class MealsFinderApplication {
 		establishment2.setAddress(address2);
 
 		try {
-			framework.insert(establishment1);
-			framework.insert(establishment2);
+			framework.save(establishment1);
+			framework.save(establishment2);
 			System.out.println("Dois estabelecimentos inseridos com sucesso.");
 
 			System.out.println("\nPASSO 2: Testando findAll para a tabela 'establishments'...");
