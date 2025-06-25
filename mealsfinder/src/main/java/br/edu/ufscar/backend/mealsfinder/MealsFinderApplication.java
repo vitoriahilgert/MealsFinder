@@ -90,6 +90,18 @@ public class MealsFinderApplication {
 			stmt.executeUpdate(createProductTableSQL);
 			System.out.println("Tabela 'products' criada.");
 
+			String createPostTableSQL = "CREATE TABLE IF NOT EXISTS posts" +
+					"(" +
+					"    id          TEXT PRIMARY KEY, " +
+					"    user_id     TEXT NOT NULL, " +
+					"    description TEXT, " +
+					"    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+					"    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE" +
+					");";
+
+			stmt.executeUpdate(createPostTableSQL);
+			System.out.println("Tabela posts criada ou já existente");
+
 
 		} catch (SQLException e) {
 			System.err.println("Ocorreu um erro ao preparar o banco de dados:");
@@ -176,13 +188,17 @@ public class MealsFinderApplication {
 			PersistenceFramework framework = new PersistenceFramework();
 			framework.setDBAbsolutePath("jdbc:sqlite:mealsfinder.db");
 
-			// --- Teste 1: Establishment (UUID PK) ---
-			System.out.println("\n--- TESTE 1: Entidade com chave UUID ---");
-			testEstablishment(framework);
-
-			// --- Teste 2: Product (Long PK) ---
-			System.out.println("\n--- TESTE 2: Entidade com chave Long ---");
-			testProduct(framework);
+//			// --- Teste 1: Establishment (UUID PK) ---
+//			System.out.println("\n--- TESTE 1: Entidade com chave UUID ---");
+//			testEstablishment(framework);
+//
+//			// --- Teste 2: Product (Long PK) ---
+//			System.out.println("\n--- TESTE 2: Entidade com chave Long ---");
+//			testProduct(framework);
+//
+			// --- Teste 3: Exists
+			System.out.println("\n--- TESTE 3: Teste Exists ---");
+			testExists(framework);
 
 			System.out.println("\n--- TESTE DO FRAMEWORK FINALIZADO ---");
 		};
@@ -201,31 +217,6 @@ public class MealsFinderApplication {
 		establishment.setPhoneNumber("(16) 98183-5500");
 		establishment.setUsername("manaapokea");
 		establishment.setRole(UserRoleEnum.ESTABLISHMENT);
-//			Establishment establishment = new Establishment();
-//			establishment.setCnpj("79.536.761/0001-12");
-//			establishment.setDelivery(true);
-//			establishment.setType(EstablishmentTypesEnum.A);
-//			establishment.setStatus(StatusEnum.OPEN);
-//			establishment.setRejections((short) 0);
-//			establishment.setInPerson(true);
-//			establishment.setEmail("manapoke@gmail.com");
-//			establishment.setPassword("password");
-//			establishment.setPhoneNumber("(16) 98183-5500");
-//			establishment.setUsername("manapoke");
-//			establishment.setRole(UserRoleEnum.ESTABLISHMENT);
-//
-//			Address address = new Address();
-//			address.setCep("13574-290");
-//			address.setCity("São Carlos");
-//			address.setState("SP");
-//			address.setNeighborhood("Vila Prado");
-//			address.setCountry("Brasil");
-//			address.setNumber("568");
-//			address.setStreet("Rua Antonio de Almeida Leite");
-//
-//			establishment.setAddress(address);
-//
-//			persistenceFramework.save(establishment);
 
 		Address address = new Address();
 		address.setCep("13544-240");
@@ -236,15 +227,9 @@ public class MealsFinderApplication {
 		address.setNumber("568");
 		address.setStreet("Rua Antonio de Almeida Leite");
 		establishment.setAddress(address);
-			Post post = new Post();
-			post.setDescription("Post de teste");
-			post.setUserId(UUID.fromString("92fa7bbd-e349-4b8b-8f76-2359ef1435c8"));
-			post.setCreatedAt(LocalDateTime.now());
-
-			//persistenceFramework.save(post);
 
 		try {
-			UUID generatedId = framework.insert(establishment);
+			UUID generatedId = framework.save(establishment);
 			System.out.println("PASSO 1: Objeto 'Establishment' inserido com ID: " + generatedId);
 			System.out.println("PASSO 2: Buscando objeto com o ID gerado...");
 			Optional<Establishment> foundOpt = framework.findByPrimaryKey(Establishment.class, generatedId);
@@ -258,10 +243,6 @@ public class MealsFinderApplication {
 			e.printStackTrace();
 		}
 	}
-			post.setId(UUID.fromString("4e3f5344-fbf2-43cf-b9fc-73b5c294c4e2"));
-
-			boolean postExists = persistenceFramework.existsById(post);
-			System.out.println("Post existe: " + postExists);
 
 	private void testProduct(PersistenceFramework framework) {
 		Product product = new Product();
@@ -296,5 +277,18 @@ public class MealsFinderApplication {
 			System.err.println("Ocorreu um erro durante o teste de Product:");
 			e.printStackTrace();
 		}
+	}
+
+	private void testExists(PersistenceFramework framework) throws Exception {
+		Post post = new Post();
+		post.setDescription("Post de teste");
+		post.setUserId(UUID.fromString("92fa7bbd-e349-4b8b-8f76-2359ef1435c8"));
+		post.setCreatedAt(LocalDateTime.now());
+
+
+		post.setId(UUID.fromString("4e3f5344-fbf2-43cf-b9fc-73b5c294c4e2"));
+
+		boolean postExists = framework.existsById(post);
+		System.out.println("Post existe: " + postExists);
 	}
 }
