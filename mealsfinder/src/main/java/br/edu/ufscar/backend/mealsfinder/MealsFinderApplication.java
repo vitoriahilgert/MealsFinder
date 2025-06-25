@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.context.annotation.Bean;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -170,6 +171,10 @@ public class MealsFinderApplication {
 			System.out.println("\n--- TESTE 2: Entidade com chave Long ---");
 			testProduct(framework);
 
+			// --- Teste 3: Find all---
+			System.out.println("\n--- TESTE 3: Testando findAll para Establishment ---");
+			testEstablishmentAndFindAll(framework);
+
 			System.out.println("\n--- TESTE DO FRAMEWORK FINALIZADO ---");
 		};
 	}
@@ -245,6 +250,78 @@ public class MealsFinderApplication {
 			}
 		} catch (Exception e) {
 			System.err.println("Ocorreu um erro durante o teste de Product:");
+			e.printStackTrace();
+		}
+	}
+
+	private void testEstablishmentAndFindAll(PersistenceFramework framework) {
+		System.out.println("\nPASSO 1: Inserindo múltiplos estabelecimentos para o teste...");
+
+		Establishment establishment1 = new Establishment();
+		establishment1.setCnpj("79.516.761/1001-12");
+		establishment1.setDelivery(true);
+		establishment1.setType(EstablishmentTypesEnum.A);
+		establishment1.setStatus(StatusEnum.OPEN);
+		establishment1.setRejections((short) 0);
+		establishment1.setInPerson(true);
+		establishment1.setEmail("becodatorta@gmail.com");
+		establishment1.setPassword("password123");
+		establishment1.setPhoneNumber("(16) 99999-1111");
+		establishment1.setUsername("becodatorta");
+		establishment1.setRole(UserRoleEnum.ESTABLISHMENT);
+
+		Address address1 = new Address();
+		address1.setCountry("Brasil");
+		address1.setStreet("Rua A");
+		address1.setNumber("100");
+		address1.setNeighborhood("Bairro A");
+		address1.setCity("Cidade A");
+		address1.setState("SP");
+		address1.setCep("11111-111");
+		establishment1.setAddress(address1);
+
+		Establishment establishment2 = new Establishment();
+		establishment2.setCnpj("12.345.478/0001-99");
+		establishment2.setDelivery(false);
+		establishment2.setType(EstablishmentTypesEnum.B);
+		establishment2.setStatus(StatusEnum.CLOSED);
+		establishment2.setRejections((short) 1);
+		establishment2.setInPerson(true);
+		establishment2.setEmail("pizzariadoze@example.com");
+		establishment2.setPassword("senha456");
+		establishment2.setPhoneNumber("(16) 98888-2222");
+		establishment2.setUsername("pizzadoze");
+		establishment2.setRole(UserRoleEnum.ESTABLISHMENT);
+
+		Address address2 = new Address();
+		address2.setCountry("Brasil");
+		address2.setStreet("Rua B");
+		address2.setNumber("200");
+		address2.setNeighborhood("Bairro B");
+		address2.setCity("Cidade B");
+		address2.setState("RJ");
+		address2.setCep("22222-222");
+		establishment2.setAddress(address2);
+
+		try {
+			framework.insert(establishment1);
+			framework.insert(establishment2);
+			System.out.println("Dois estabelecimentos inseridos com sucesso.");
+
+			System.out.println("\nPASSO 2: Testando findAll para a tabela 'establishments'...");
+			List<Establishment> allEstablishments = framework.findAll(Establishment.class);
+
+			if (allEstablishments != null && !allEstablishments.isEmpty()) {
+				System.out.println(">> SUCESSO: findAll encontrou " + allEstablishments.size() + " estabelecimentos.");
+				for (Establishment est : allEstablishments) {
+					System.out.println("   - Username: " + est.getUsername() + ", CNPJ: " + est.getCnpj() + ", ID: " + est.getId());
+				}
+			} else {
+				System.err.println(">> FALHA: findAll não retornou nenhum estabelecimento.");
+			}
+
+		} catch (Exception e) {
+			System.err.println("Ocorreu um erro durante o teste de Establishment:");
 			e.printStackTrace();
 		}
 	}

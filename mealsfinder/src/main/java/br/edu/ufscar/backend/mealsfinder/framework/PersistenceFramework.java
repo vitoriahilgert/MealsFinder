@@ -265,4 +265,40 @@ public class PersistenceFramework {
         throw new Exception("Nenhum campo com @Id encontrado na entidade " + clazz.getSimpleName());
     }
 
+    public <T> List<T> findAll(Class<T> clazz) throws Exception {
+        if (!clazz.isAnnotationPresent(Entity.class)) {
+            throw new Exception("A classe não é uma entidade JPA.");
+        }
+
+        List<T> results = new ArrayList<>();
+        String sql = buildFindAllSelectSQL(clazz);
+
+        try (Connection conn = DriverManager.getConnection(databasePath);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                T instance = clazz.getDeclaredConstructor().newInstance();
+                populateObjectFromResultSet(instance, clazz, rs);
+                results.add(instance);
+            }
+        }
+        return results;
+    }
+
+    private String buildFindAllSelectSQL(Class<?> clazz) throws Exception {
+        Entity entityAnnotation = clazz.getAnnotation(Entity.class);
+        String mainTable = entityAnnotation.name();
+        Class<?> superclass = clazz.getSuperclass();
+
+        if (superclass != null && superclass.isAnnotationPresent(Entity.class)) {
+            String superTable = superclass.getAnnotation(Entity.class).name();
+            String superTablePkName = getPrimaryKeyColumnName(superclass);
+            return String.format("SELECT * FROM %s t1 JOIN %s t2 ON t1.user_id = t2.%s",
+                    mainTable, superTable, superTablePkName);
+        } else {
+            return String.format("SELECT * FROM %s", mainTable);
+        }
+    }
+
 }
