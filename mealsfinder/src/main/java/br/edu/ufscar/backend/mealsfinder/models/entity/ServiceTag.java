@@ -6,13 +6,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "service_tags")
+@br.ufscar.pooa.Framework___POOA.persistence_framework.annotation.Entity(tableName = "service_tags")
 public class ServiceTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @br.ufscar.pooa.Framework___POOA.persistence_framework.annotation.Id
+    @br.ufscar.pooa.Framework___POOA.persistence_framework.annotation.Column(name = "id")
     private Integer id;
 
     @Column(name = "name", unique = true, nullable = false)
+    @br.ufscar.pooa.Framework___POOA.persistence_framework.annotation.Column(name = "name")
     private String name;
 
     public ServiceTag() {

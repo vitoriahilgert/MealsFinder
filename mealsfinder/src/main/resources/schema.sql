@@ -16,8 +16,6 @@ DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS posts;
-DROP TABLE IF EXISTS menu_items;
-DROP TABLE IF EXISTS menu_categories;
 DROP TABLE IF EXISTS establishments;
 DROP TABLE IF EXISTS clients;
 DROP TABLE IF EXISTS users;
@@ -82,27 +80,6 @@ CREATE TABLE IF NOT EXISTS establishments
     address_number        TEXT,
     address_complement    TEXT,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS menu_categories
-(
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-    establishment_id TEXT    NOT NULL,
-    name             TEXT    NOT NULL,
-    display_order    INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY (establishment_id) REFERENCES establishments (user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS menu_items
-(
-    id           TEXT PRIMARY KEY,
-    category_id  INTEGER NOT NULL,
-    name         TEXT    NOT NULL,
-    description  TEXT,
-    price        REAL    NOT NULL,
-    image_url    TEXT,
-    is_available BOOLEAN NOT NULL DEFAULT 1,
-    FOREIGN KEY (category_id) REFERENCES menu_categories (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS posts
@@ -291,8 +268,6 @@ CREATE TABLE IF NOT EXISTS post_service_tags
     FOREIGN KEY (service_tag_id) REFERENCES service_tags (id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_menu_categories_establishment_id ON menu_categories (establishment_id);
-CREATE INDEX IF NOT EXISTS idx_menu_items_category_id ON menu_items (category_id);
 CREATE INDEX IF NOT EXISTS idx_posts_user_id ON posts (user_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_reviewed_establishment_id ON reviews (reviewed_establishment_id);
 CREATE INDEX IF NOT EXISTS idx_comments_post_id ON comments (post_id);

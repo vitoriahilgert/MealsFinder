@@ -2,5 +2,6 @@ package br.edu.ufscar.backend.mealsfinder.models.enums;
 
 public enum ImageType {
     POST,
-    ESTABLISHMENT_PICTURE
+    ESTABLISHMENT_PICTURE,
+    MENU
 }

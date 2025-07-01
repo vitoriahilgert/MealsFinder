@@ -38,9 +38,6 @@ public class Establishment extends User {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MenuCategory> menuCategories;
-
     @OneToMany(mappedBy = "reviewedEstablishment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews;
 
@@ -137,14 +134,6 @@ public class Establishment extends User {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public Set<MenuCategory> getMenuCategories() {
-        return menuCategories;
-    }
-
-    public void setMenuCategories(Set<MenuCategory> menuCategories) {
-        this.menuCategories = menuCategories;
     }
 
     public Set<Review> getReviews() {

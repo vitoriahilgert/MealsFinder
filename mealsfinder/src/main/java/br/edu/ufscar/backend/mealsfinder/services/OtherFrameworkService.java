@@ -9,14 +9,14 @@ import br.ufscar.pooa.Framework___POOA.persistence_framework.database.DatabaseMa
 import org.springframework.stereotype.Service;
 
 @Service
-public class LegacyFrameworkService {
+public class OtherFrameworkService {
 
     private final IFrameworkRepository<FoodTag, Integer> foodTagRepository;
     private final IFrameworkRepository<ServiceTag, Integer> serviceTagRepository;
     private final IFrameworkRepository<EnvironmentTag, Integer> environmentTagRepository;
 
-    public LegacyFrameworkService(DatabaseManager databaseManager) {
-        System.out.println("-> Inicializando serviço com o framework legado...");
+    public OtherFrameworkService(DatabaseManager databaseManager) {
+        System.out.println("-> Inicializando serviço com o framework de outro grupo...");
 
         var foodTagFactory = new FrameworkRepositoryFactory<FoodTag, Integer>(databaseManager);
         this.foodTagRepository = foodTagFactory.getRepository(FoodTag.class);
@@ -27,7 +27,7 @@ public class LegacyFrameworkService {
         var environmentTagFactory = new FrameworkRepositoryFactory<EnvironmentTag, Integer>(databaseManager);
         this.environmentTagRepository = environmentTagFactory.getRepository(EnvironmentTag.class);
 
-        System.out.println("-> Repositórios do framework legado prontos para uso.");
+        System.out.println("-> Repositórios do framework de outro grupo prontos para uso.");
     }
 
     public IFrameworkRepository<FoodTag, Integer> getFoodTagRepository() {
