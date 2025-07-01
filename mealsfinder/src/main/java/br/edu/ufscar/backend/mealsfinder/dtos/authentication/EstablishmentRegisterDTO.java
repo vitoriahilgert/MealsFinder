@@ -1,10 +1,9 @@
 package br.edu.ufscar.backend.mealsfinder.dtos.authentication;
 
-import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentTypesEnum;
+import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentType;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 
 import java.util.List;
-import java.util.UUID;
 
 public class EstablishmentRegisterDTO {
     private String cnpj;
@@ -14,7 +13,7 @@ public class EstablishmentRegisterDTO {
     private String password;
     private String profilePicUrl;
     private String bio;
-    private EstablishmentTypesEnum type;
+    private EstablishmentType type;
     private boolean isDelivery;
     private boolean isInPerson;
     private StatusEnum status;
@@ -82,11 +81,11 @@ public class EstablishmentRegisterDTO {
         this.bio = bio;
     }
 
-    public EstablishmentTypesEnum getType() {
+    public EstablishmentType getType() {
         return type;
     }
 
-    public void setType(EstablishmentTypesEnum type) {
+    public void setType(EstablishmentType type) {
         this.type = type;
     }
 

@@ -1,80 +1,128 @@
 package br.edu.ufscar.backend.mealsfinder.models;
 
-import br.edu.ufscar.backend.mealsfinder.models.enums.ActionTypeEnum;
-import br.edu.ufscar.backend.mealsfinder.models.enums.EntityTypeEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import br.edu.ufscar.backend.mealsfinder.framework.retentions.*;
-import org.hibernate.annotations.CreationTimestamp;
+import br.edu.ufscar.backend.mealsfinder.models.entity.User;
+import br.edu.ufscar.backend.mealsfinder.models.enums.ActivityType;
+import br.edu.ufscar.backend.mealsfinder.models.enums.EntityType;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
-import java.util.UUID;
+@Entity
+@Table(name = "user_activities")
+public class UserActivity {
 
-@Entity(name = "user_activities")
-class UserActivity {
+    @Id
     @Column(name = "id")
-    private UUID id;
+    private String id;
 
-//    @ManyToOne
-//    private User user;
-//
-//    @Column(nullable = false)
-//    private UUID entityId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "action_type")
-    private ActionTypeEnum actionType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action_type", nullable = false)
+    private ActivityType actionType;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "entity_type")
-    private EntityTypeEnum entityType;
+    private EntityType entityType;
 
-    @CreationTimestamp
-    @Column(name = "timestamp")
-    private int timestamp;
+    @Column(name = "entity_id")
+    private String entityId;
+
+    @Column(name = "timestamp", nullable = false, updatable = false)
+    private LocalDateTime timestamp;
 
     @Column(name = "engagement_score")
-    private float engagementScore;
+    private Double engagementScore;
 
-    //private ObjectMapper context;
+    @Column(name = "context_json", columnDefinition = "TEXT")
+    private String contextJson;
 
+    @PrePersist
+    protected void onCreate() {
+        if (this.timestamp == null) {
+            this.timestamp = LocalDateTime.now();
+        }
+    }
 
     public UserActivity() {
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public ActionTypeEnum getActionType() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ActivityType getActionType() {
         return actionType;
     }
 
-    public void setActionType(ActionTypeEnum actionType) {
+    public void setActionType(ActivityType actionType) {
         this.actionType = actionType;
     }
 
-    public EntityTypeEnum getEntityType() {
+    public EntityType getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(EntityTypeEnum entityType) {
+    public void setEntityType(EntityType entityType) {
         this.entityType = entityType;
     }
 
-    public int getTimestamp() {
+    public String getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
+    }
+
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(int timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public float getEngagementScore() {
+    public Double getEngagementScore() {
         return engagementScore;
     }
 
-    public void setEngagementScore(float engagementScore) {
+    public void setEngagementScore(Double engagementScore) {
         this.engagementScore = engagementScore;
+    }
+
+    public String getContextJson() {
+        return contextJson;
+    }
+
+    public void setContextJson(String contextJson) {
+        this.contextJson = contextJson;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserActivity that = (UserActivity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
