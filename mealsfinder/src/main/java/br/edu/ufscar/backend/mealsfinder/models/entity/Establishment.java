@@ -2,8 +2,10 @@ package br.edu.ufscar.backend.mealsfinder.models.entity;
 
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentType;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
+import br.edu.ufscar.backend.mealsfinder.models.states.EstablishmentState;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -32,8 +34,15 @@ public class Establishment extends User {
     @Column(name = "status", nullable = false)
     private StatusEnum status;
 
+    @Transient
+    private EstablishmentState state;
+
     @Column(name = "rejections", nullable = false)
-    private int rejections;
+    private int rejectionsCount;
+
+    private LocalDate rejectionDate;
+
+    private boolean isVisible;
 
     @Embedded
     private Address address;
@@ -70,6 +79,38 @@ public class Establishment extends User {
 
     public Establishment() {
         super();
+    }
+
+    public EstablishmentState getState() {
+        return state;
+    }
+
+    public void setState(EstablishmentState state) {
+        this.state = state;
+    }
+
+    public int getRejectionsCount() {
+        return rejectionsCount;
+    }
+
+    public void setRejectionsCount(int rejectionsCount) {
+        this.rejectionsCount = rejectionsCount;
+    }
+
+    public LocalDate getRejectionDate() {
+        return rejectionDate;
+    }
+
+    public void setRejectionDate(LocalDate rejectionDate) {
+        this.rejectionDate = rejectionDate;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 
     public String getCnpj() {
