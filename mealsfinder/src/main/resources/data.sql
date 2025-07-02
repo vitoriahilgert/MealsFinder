@@ -42,9 +42,9 @@ VALUES ('user-client-carlos'),
        ('user-client-bruno');
 
 INSERT INTO establishments (user_id, cnpj, name, establishment_type, status, is_delivery, is_presencial)
-VALUES ('user-est-pizzaria', '11222333000144', 'Bella Pizza', 'Pizzaria', 'PENDENTE', 1, 1),
-       ('user-est-sushi', '44555666000177', 'Sushi House', 'Restaurante Japonês', 'PENDENTE', 1, 1),
-       ('user-est-cafe', '77888999000122', 'Grão & Cultura Café', 'Cafeteria', 'PENDENTE', 0, 1);
+VALUES ('user-est-pizzaria', '11222333000144', 'Bella Pizza', 'Pizzaria', 'PENDING', 1, 1),
+       ('user-est-sushi', '44555666000177', 'Sushi House', 'Restaurante Japonês', 'PENDING', 1, 1),
+       ('user-est-cafe', '77888999000122', 'Grão & Cultura Café', 'Cafeteria', 'PENDING', 0, 1);
 
 INSERT INTO posts (id, user_id, description)
 VALUES ('post-01-pizzaria', 'user-est-pizzaria',

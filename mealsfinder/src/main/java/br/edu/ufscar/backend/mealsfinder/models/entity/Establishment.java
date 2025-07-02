@@ -41,8 +41,10 @@ public class Establishment extends User {
     @Column(name = "rejections", nullable = false)
     private int rejectionsCount;
 
+    @Column(name = "rejection_date")
     private LocalDate rejectionDate;
 
+    @Column(name = "is_visible")
     private boolean isVisible;
 
     @Embedded

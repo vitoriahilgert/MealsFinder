@@ -1,5 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.controllers;
 
+import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentResponseDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentUpdateDTO;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
 import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
@@ -31,12 +32,12 @@ public class EstablishmentController {
         return ResponseEntity.ok(updated);
     }
 
-    @PatchMapping("/{id}/analyze")
-    public ResponseEntity<Establishment> analyzeEstablishment(
+    @PatchMapping("/analyze/{id}")
+    public ResponseEntity<EstablishmentResponseDTO> analyzeEstablishment(
             @PathVariable String id,
             @RequestParam("result") AnalysisResult result) {
 
-        Establishment updatedEstablishment = establishmentService.analyzeEstablishment(id, result);
+        EstablishmentResponseDTO updatedEstablishment = establishmentService.analyzeEstablishment(id, result);
         return ResponseEntity.ok(updatedEstablishment);
     }
 

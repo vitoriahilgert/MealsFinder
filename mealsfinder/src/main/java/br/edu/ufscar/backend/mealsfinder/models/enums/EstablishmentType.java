@@ -4,7 +4,8 @@ public enum EstablishmentType {
     RESTAURANTE,
     BAR,
     LANCHONETE,
-    CAFETERIA,
+    Cafeteria,
     FOOD_TRUCK,
-    PADARIA
+    PADARIA,
+    Pizzaria
 }

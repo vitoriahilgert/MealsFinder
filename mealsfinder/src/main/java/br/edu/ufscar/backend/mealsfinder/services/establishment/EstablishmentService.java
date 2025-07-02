@@ -1,5 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.services.establishment;
 
+import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentResponseDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentUpdateDTO;
 import br.edu.ufscar.backend.mealsfinder.events.EstablishmentUpdateEvent;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
@@ -48,11 +49,13 @@ public class EstablishmentService {
     }
 
     @Transactional
-    public Establishment analyzeEstablishment(String id, AnalysisResult result) {
+    public EstablishmentResponseDTO analyzeEstablishment(String id, AnalysisResult result) {
         Establishment establishment = this.findById(id);
 
         establishment.handleAnalysis(result);
 
-        return establishmentRepository.save(establishment);
+        establishmentRepository.save(establishment);
+
+        return new EstablishmentResponseDTO(establishment);
     }
 }
