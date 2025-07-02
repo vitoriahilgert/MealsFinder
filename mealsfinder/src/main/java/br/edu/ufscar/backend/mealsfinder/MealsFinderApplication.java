@@ -7,11 +7,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {
         "br.edu.ufscar.backend.mealsfinder",
         "br.ufscar.pooa.Framework___POOA"
 })
+@EnableScheduling
 public class MealsFinderApplication {
 
     public static void main(String[] args) {

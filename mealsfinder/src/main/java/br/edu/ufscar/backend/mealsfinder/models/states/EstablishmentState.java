@@ -9,3 +9,5 @@ public abstract class EstablishmentState {
         System.out.println("Método para ser sobrescrito pelo estado Rejected.");
     };
 }
+
+

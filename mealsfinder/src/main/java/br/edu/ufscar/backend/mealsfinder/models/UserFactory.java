@@ -37,7 +37,7 @@ public class UserFactory {
         establishment.setPassword(dto.getPassword());
         establishment.setPhoneNumber(dto.getPhoneNumber());
         establishment.setProfilePictureUrl(dto.getProfilePicUrl());
-
+        establishment.setBio(dto.getBio());
         establishment.setEstablishmentType(dto.getType());
         establishment.setName(dto.getName());
         establishment.setState(Pending.getInstance());

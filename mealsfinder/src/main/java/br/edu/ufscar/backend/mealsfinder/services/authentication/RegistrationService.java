@@ -6,6 +6,7 @@ import br.edu.ufscar.backend.mealsfinder.dtos.authentication.EstablishmentRegist
 import br.edu.ufscar.backend.mealsfinder.models.UserFactory;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Client;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
+import br.edu.ufscar.backend.mealsfinder.models.states.Pending;
 import br.edu.ufscar.backend.mealsfinder.repositories.ClientRepository;
 import br.edu.ufscar.backend.mealsfinder.repositories.EstablishmentRepository;
 import jakarta.transaction.Transactional;
@@ -35,6 +36,7 @@ public class RegistrationService implements IRegistrationService {
     @Transactional
     public Establishment registerEstablishment(EstablishmentRegisterDTO establishmentRegisterDTO) {
         Establishment newEstablishment = userFactory.createEstablishment(establishmentRegisterDTO);
+
         return establishmentRepository.save(newEstablishment);
     }
 }

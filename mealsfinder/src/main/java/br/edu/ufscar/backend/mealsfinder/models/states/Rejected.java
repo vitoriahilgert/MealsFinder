@@ -20,7 +20,7 @@ public class Rejected extends EstablishmentState {
     public void handleAnalysis(Establishment establishment, AnalysisResult result) {
         switch (result) {
             case ACCEPTED:
-                System.out.println("Resultado da análise: Aprovado! Trocando de estado...");
+                System.out.println("Resultado da análise: Aprovado após contestar rejeição! Trocando de estado...");
                 establishment.setVisible(true);
                 establishment.setState(Accepted.getInstance());
                 break;
