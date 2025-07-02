@@ -26,15 +26,6 @@ public class Client extends User {
     )
     private Set<FoodTag> dislikedFoodTags;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SavedPost> savedPosts;
-
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Follow> following;
-
-    @OneToMany(mappedBy = "blocker", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BlockedUser> blockedUsers;
-
     public Client() {
         super();
     }
@@ -53,30 +44,6 @@ public class Client extends User {
 
     public void setDislikedFoodTags(Set<FoodTag> dislikedFoodTags) {
         this.dislikedFoodTags = dislikedFoodTags;
-    }
-
-    public Set<SavedPost> getSavedPosts() {
-        return savedPosts;
-    }
-
-    public void setSavedPosts(Set<SavedPost> savedPosts) {
-        this.savedPosts = savedPosts;
-    }
-
-    public Set<Follow> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(Set<Follow> following) {
-        this.following = following;
-    }
-
-    public Set<BlockedUser> getBlockedUsers() {
-        return blockedUsers;
-    }
-
-    public void setBlockedUsers(Set<BlockedUser> blockedUsers) {
-        this.blockedUsers = blockedUsers;
     }
 
     @Override

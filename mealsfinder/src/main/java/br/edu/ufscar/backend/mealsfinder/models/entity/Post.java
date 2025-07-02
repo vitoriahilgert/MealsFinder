@@ -27,18 +27,6 @@ public class Post {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Review review;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Image> images;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PostLike> likes;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SavedPost> saves;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_food_tags",
@@ -111,38 +99,6 @@ public class Post {
 
     public void setReview(Review review) {
         this.review = review;
-    }
-
-    public Set<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public Set<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<Image> images) {
-        this.images = images;
-    }
-
-    public Set<PostLike> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Set<PostLike> likes) {
-        this.likes = likes;
-    }
-
-    public Set<SavedPost> getSaves() {
-        return saves;
-    }
-
-    public void setSaves(Set<SavedPost> saves) {
-        this.saves = saves;
     }
 
     public Set<FoodTag> getFoodTags() {
