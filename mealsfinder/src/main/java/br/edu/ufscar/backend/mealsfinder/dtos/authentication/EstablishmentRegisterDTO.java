@@ -10,6 +10,7 @@ public class EstablishmentRegisterDTO {
     private String email;
     private String phoneNumber;
     private String username;
+    private String name;
     private String password;
     private String profilePicUrl;
     private String bio;
@@ -143,5 +144,13 @@ public class EstablishmentRegisterDTO {
 
     public void setRejections(int rejections) {
         this.rejections = rejections;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

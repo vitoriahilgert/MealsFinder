@@ -4,6 +4,6 @@ public enum StatusEnum {
     OPEN,
     CLOSED,
     TEMPORARILY_CLOSED,
-    PENDING_APPROVAL,
+    PENDING,
     REJECTED
 }

@@ -19,9 +19,9 @@ public class AuthenticationController {
     private IAuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody CredentialsDTO credentials) {
-        authenticationService.login(credentials);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<User> login(@RequestBody CredentialsDTO credentials) {
+        User authenticatedUser = authenticationService.login(credentials);
+        return ResponseEntity.ok(authenticatedUser);
     }
 
     @PostMapping("/register/client")
