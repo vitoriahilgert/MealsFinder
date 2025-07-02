@@ -1,8 +1,9 @@
 package br.edu.ufscar.backend.mealsfinder.models.entity;
 
+import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentType;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
-import br.edu.ufscar.backend.mealsfinder.models.states.EstablishmentState;
+import br.edu.ufscar.backend.mealsfinder.models.states.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -77,6 +78,10 @@ public class Establishment extends User {
     )
     private Set<EnvironmentTag> environmentTags;
 
+    public void handleAnalysis(AnalysisResult result) {
+        this.state.handleAnalysis(this, result);
+    }
+
     public Establishment() {
         super();
     }
@@ -87,6 +92,11 @@ public class Establishment extends User {
 
     public void setState(EstablishmentState state) {
         this.state = state;
+
+        if (state instanceof Pending) this.status = StatusEnum.PENDING;
+        else if (state instanceof Accepted) this.status = StatusEnum.ACCEPTED;
+        else if (state instanceof Rejected) this.status = StatusEnum.REJECTED;
+        else if (state instanceof Banned) this.status = StatusEnum.BANNED;
     }
 
     public int getRejectionsCount() {
@@ -161,14 +171,6 @@ public class Establishment extends User {
         this.status = status;
     }
 
-    public int getRejections() {
-        return rejections;
-    }
-
-    public void setRejections(int rejections) {
-        this.rejections = rejections;
-    }
-
     public Address getAddress() {
         return address;
     }
@@ -224,5 +226,17 @@ public class Establishment extends User {
                 ", name='" + name + '\'' +
                 ", cnpj='" + cnpj + '\'' +
                 '}';
+    }
+
+    @PostLoad
+    public void initializeState() {
+        if (this.status != null) {
+            switch (this.status) {
+                case PENDING: this.state = Pending.getInstance(); break;
+                case ACCEPTED: this.state = Accepted.getInstance(); break;
+                case REJECTED: this.state = Rejected.getInstance(); break;
+                case BANNED: this.state = Banned.getInstance(); break;
+            }
+        }
     }
 }

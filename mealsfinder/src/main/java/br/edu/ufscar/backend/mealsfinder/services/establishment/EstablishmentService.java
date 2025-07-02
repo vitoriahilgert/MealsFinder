@@ -3,6 +3,7 @@ package br.edu.ufscar.backend.mealsfinder.services.establishment;
 import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentUpdateDTO;
 import br.edu.ufscar.backend.mealsfinder.events.EstablishmentUpdateEvent;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
+import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
 import br.edu.ufscar.backend.mealsfinder.repositories.EstablishmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -44,5 +45,14 @@ public class EstablishmentService {
         eventPublisher.publishEvent(new EstablishmentUpdateEvent(this, updatedEstablishment));
 
         return updatedEstablishment;
+    }
+
+    @Transactional
+    public Establishment analyzeEstablishment(String id, AnalysisResult result) {
+        Establishment establishment = this.findById(id);
+
+        establishment.handleAnalysis(result);
+
+        return establishmentRepository.save(establishment);
     }
 }

@@ -2,6 +2,7 @@ package br.edu.ufscar.backend.mealsfinder.controllers;
 
 import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentUpdateDTO;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
+import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
 import br.edu.ufscar.backend.mealsfinder.services.establishment.EstablishmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,4 +30,15 @@ public class EstablishmentController {
         Establishment updated = establishmentService.updateEstablishmentProfile(id, updateDTO);
         return ResponseEntity.ok(updated);
     }
+
+    @PatchMapping("/{id}/analyze")
+    public ResponseEntity<Establishment> analyzeEstablishment(
+            @PathVariable String id,
+            @RequestParam("result") AnalysisResult result) {
+
+        Establishment updatedEstablishment = establishmentService.analyzeEstablishment(id, result);
+        return ResponseEntity.ok(updatedEstablishment);
+    }
+
+
 }
