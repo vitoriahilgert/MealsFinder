@@ -5,6 +5,7 @@ import br.edu.ufscar.backend.mealsfinder.models.entity.Client;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Follow;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Notification;
+import br.edu.ufscar.backend.mealsfinder.repositories.FollowRepository;
 import br.edu.ufscar.backend.mealsfinder.repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -12,7 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
 
 @Component
 public class NotificationListener {
@@ -20,13 +21,15 @@ public class NotificationListener {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private FollowRepository followRepository;
+
     @Async
     @EventListener
     @Transactional
     public void handleEstablishmentUpdate(EstablishmentUpdateEvent event) {
         Establishment establishment = event.getEstablishment();
-        Set<Follow> followRelationships = establishment.getFollowers();
-
+        List<Follow> followRelationships = followRepository.findByFollowingId(establishment.getId());
         if (followRelationships == null || followRelationships.isEmpty()) {
             return;
         }

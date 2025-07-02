@@ -26,9 +26,6 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    private Set<Comment> replies;
-
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CommentLike> likes;
 
@@ -78,14 +75,6 @@ public class Comment {
 
     public void setParentComment(Comment parentComment) {
         this.parentComment = parentComment;
-    }
-
-    public Set<Comment> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(Set<Comment> replies) {
-        this.replies = replies;
     }
 
     public Set<CommentLike> getLikes() {

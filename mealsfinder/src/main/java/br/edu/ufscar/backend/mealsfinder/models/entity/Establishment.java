@@ -50,12 +50,6 @@ public class Establishment extends User {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "reviewedEstablishment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Review> reviews;
-
-    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Image> images;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "establishment_food_tags",
@@ -179,22 +173,6 @@ public class Establishment extends User {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public Set<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<Image> images) {
-        this.images = images;
     }
 
     public Set<FoodTag> getFoodTags() {

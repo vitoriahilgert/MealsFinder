@@ -1,11 +1,9 @@
 package br.edu.ufscar.backend.mealsfinder.models.entity;
 
-import br.edu.ufscar.backend.mealsfinder.models.UserActivity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -43,27 +41,6 @@ public abstract class User {
 
     @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Post> posts;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserActivity> activities;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PostLike> postLikes;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CommentLike> commentLikes;
-
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Follow> followers;
-
-    @OneToMany(mappedBy = "blocked", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BlockedUser> blockers;
 
     public User() {
     }
@@ -153,62 +130,6 @@ public abstract class User {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public Set<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<Post> posts) {
-        this.posts = posts;
-    }
-
-    public Set<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public Set<UserActivity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(Set<UserActivity> activities) {
-        this.activities = activities;
-    }
-
-    public Set<PostLike> getPostLikes() {
-        return postLikes;
-    }
-
-    public void setPostLikes(Set<PostLike> postLikes) {
-        this.postLikes = postLikes;
-    }
-
-    public Set<CommentLike> getCommentLikes() {
-        return commentLikes;
-    }
-
-    public void setCommentLikes(Set<CommentLike> commentLikes) {
-        this.commentLikes = commentLikes;
-    }
-
-    public Set<Follow> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(Set<Follow> followers) {
-        this.followers = followers;
-    }
-
-    public Set<BlockedUser> getBlockers() {
-        return blockers;
-    }
-
-    public void setBlockers(Set<BlockedUser> blockers) {
-        this.blockers = blockers;
     }
 
     @Override
