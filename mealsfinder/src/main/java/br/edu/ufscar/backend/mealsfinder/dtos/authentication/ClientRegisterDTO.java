@@ -1,7 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.dtos.authentication;
 
-import java.util.List;
-import java.util.UUID;
+import br.edu.ufscar.backend.mealsfinder.models.entity.FoodTag;
+
+import java.util.Set;
 
 public class ClientRegisterDTO {
     private String email;
@@ -10,9 +11,8 @@ public class ClientRegisterDTO {
     private String password;
     private String profilePicUrl;
     private String bio;
-    private List<UUID> followers;
-    private List<String> likes;
-    private List<String> dislikes;
+    private Set<FoodTag> likes;
+    private Set<FoodTag> dislikes;
 
     public ClientRegisterDTO() {
     }
@@ -65,27 +65,19 @@ public class ClientRegisterDTO {
         this.bio = bio;
     }
 
-    public List<UUID> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(List<UUID> followers) {
-        this.followers = followers;
-    }
-
-    public List<String> getLikes() {
+    public Set<FoodTag> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<String> likes) {
+    public void setLikes(Set<FoodTag> likes) {
         this.likes = likes;
     }
 
-    public List<String> getDislikes() {
+    public Set<FoodTag> getDislikes() {
         return dislikes;
     }
 
-    public void setDislikes(List<String> dislikes) {
+    public void setDislikes(Set<FoodTag> dislikes) {
         this.dislikes = dislikes;
     }
 }
