@@ -1,6 +1,5 @@
 package br.edu.ufscar.backend.mealsfinder.services.authentication.strategies;
 
-import br.edu.ufscar.backend.mealsfinder.services.authentication.strategies.ILoginStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,7 @@ public class LoginStrategyFactory {
     }
 
     public ILoginStrategy getStrategy(String method) {
-        return strategies.get(method);
+        return strategies.get(method.toLowerCase());
     }
 }
 

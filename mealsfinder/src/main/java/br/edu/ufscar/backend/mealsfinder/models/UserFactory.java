@@ -4,19 +4,38 @@ import br.edu.ufscar.backend.mealsfinder.dtos.authentication.ClientRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.EstablishmentRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Client;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
-import br.edu.ufscar.backend.mealsfinder.models.entity.User;
+import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
+import org.springframework.stereotype.Component;
 
-import java.util.UUID;
 
+@Component
 public class UserFactory {
-    public static User createClient(ClientRegisterDTO clientDTO) {
-
-        return new Client();
+    public Client createClient(ClientRegisterDTO dto) {
+        Client client = new Client();
+        client.setEmail(dto.getEmail());
+        client.setUsername(dto.getUsername());
+        client.setPhoneNumber(dto.getPhoneNumber());
+        client.setPassword(dto.getPassword());
+        client.setProfilePictureUrl(dto.getProfilePicUrl());
+        client.setBio(dto.getBio());
+        client.setLikedFoodTags(dto.getLikes());
+        client.setDislikedFoodTags(dto.getDislikes());
+        return client;
     }
 
-    public static User createEstablishment(EstablishmentRegisterDTO establishmentDTO) {
+    public Establishment createEstablishment(EstablishmentRegisterDTO dto) {
+        Establishment establishment = new Establishment();
+        establishment.setCnpj(dto.getCnpj());
+        establishment.setEmail(dto.getEmail());
+        establishment.setUsername(dto.getUsername());
+        establishment.setPassword(dto.getPassword());
+        establishment.setPhoneNumber(dto.getPhoneNumber());
+        establishment.setProfilePictureUrl(dto.getProfilePicUrl());
 
-        return new Establishment();
+        establishment.setEstablishmentType(dto.getType());
+        establishment.setName(dto.getName());
+        establishment.setStatus(StatusEnum.PENDING);
+        return establishment;
     }
 }
 

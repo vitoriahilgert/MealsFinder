@@ -10,6 +10,6 @@ public interface IAuthenticationService {
 
     User registerEstablishment(EstablishmentRegisterDTO establishmentRegisterDTO);
 
-    void login(CredentialsDTO credentials);
+    User login(CredentialsDTO credentials);
 }
 
