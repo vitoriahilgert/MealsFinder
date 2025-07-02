@@ -7,7 +7,8 @@ import br.edu.ufscar.backend.mealsfinder.models.UserFactory;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Client;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
 import br.edu.ufscar.backend.mealsfinder.models.entity.User;
-import br.edu.ufscar.backend.mealsfinder.repositories.UserRepository;
+import br.edu.ufscar.backend.mealsfinder.repositories.ClientRepository;
+import br.edu.ufscar.backend.mealsfinder.repositories.EstablishmentRepository;
 import br.edu.ufscar.backend.mealsfinder.services.authentication.strategies.ILoginStrategy;
 import br.edu.ufscar.backend.mealsfinder.services.authentication.strategies.LoginStrategyFactory;
 import jakarta.transaction.Transactional;
@@ -23,7 +24,10 @@ public class AuthenticationService implements IAuthenticationService {
     private UserFactory userFactory;
 
     @Autowired
-    private UserRepository userRepository;
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private EstablishmentRepository establishmentRepository;
 
     @Override
     public User login(CredentialsDTO credentials) {
@@ -35,14 +39,14 @@ public class AuthenticationService implements IAuthenticationService {
     @Transactional
     public User registerClient(ClientRegisterDTO clientRegisterDTO) {
         Client newClient = userFactory.createClient(clientRegisterDTO);
-        return userRepository.save(newClient);
+        return clientRepository.save(newClient);
     }
 
     @Override
     @Transactional
     public User registerEstablishment(EstablishmentRegisterDTO establishmentRegisterDTO) {
         Establishment newEstablishment = userFactory.createEstablishment(establishmentRegisterDTO);
-        return userRepository.save(newEstablishment);
+        return establishmentRepository.save(newEstablishment);
     }
 
 }
