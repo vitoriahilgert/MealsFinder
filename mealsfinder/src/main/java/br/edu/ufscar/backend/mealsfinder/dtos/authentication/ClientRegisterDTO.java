@@ -1,7 +1,9 @@
 package br.edu.ufscar.backend.mealsfinder.dtos.authentication;
 
-import br.edu.ufscar.backend.mealsfinder.models.entity.FoodTag;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTag;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class ClientRegisterDTO {
@@ -11,8 +13,8 @@ public class ClientRegisterDTO {
     private String password;
     private String profilePicUrl;
     private String bio;
-    private Set<FoodTag> likes;
-    private Set<FoodTag> dislikes;
+    private Set<FoodTag> likedFoodTags = new HashSet<>();
+    private Set<FoodTag> dislikedFoodTags = new HashSet<>();
 
     public ClientRegisterDTO() {
     }
@@ -65,19 +67,21 @@ public class ClientRegisterDTO {
         this.bio = bio;
     }
 
-    public Set<FoodTag> getLikes() {
-        return likes;
+    public Set<FoodTag> getLikedFoodTags() {
+        return likedFoodTags;
     }
 
-    public void setLikes(Set<FoodTag> likes) {
-        this.likes = likes;
+    @JsonAlias("likes")
+    public void setLikedFoodTags(Set<FoodTag> likedFoodTags) {
+        this.likedFoodTags = likedFoodTags != null ? likedFoodTags : new HashSet<>();
     }
 
-    public Set<FoodTag> getDislikes() {
-        return dislikes;
+    public Set<FoodTag> getDislikedFoodTags() {
+        return dislikedFoodTags;
     }
 
-    public void setDislikes(Set<FoodTag> dislikes) {
-        this.dislikes = dislikes;
+    @JsonAlias("dislikes")
+    public void setDislikedFoodTags(Set<FoodTag> dislikedFoodTags) {
+        this.dislikedFoodTags = dislikedFoodTags != null ? dislikedFoodTags : new HashSet<>();
     }
 }

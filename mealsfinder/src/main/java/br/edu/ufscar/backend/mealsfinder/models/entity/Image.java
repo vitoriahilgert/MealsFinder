@@ -19,8 +19,8 @@ public class Image {
     private Establishment establishment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     @Column(name = "url", nullable = false)
     private String url;
@@ -58,12 +58,12 @@ public class Image {
         this.establishment = establishment;
     }
 
-    public Post getPost() {
-        return post;
+    public Review getReview() {
+        return review;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setReview(Review review) {
+        this.review = review;
     }
 
     public String getUrl() {

@@ -1,5 +1,6 @@
 package br.edu.ufscar.backend.mealsfinder.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -33,11 +34,6 @@ public abstract class User {
     @Column(name = "account_creation_date", nullable = false, updatable = false)
     private LocalDateTime accountCreationDate;
 
-    @Column(name = "is_account_confirmed", nullable = false)
-    private boolean accountConfirmed;
-
-    @Column(name = "confirmation_code")
-    private String confirmationCode;
 
     @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
@@ -84,6 +80,7 @@ public abstract class User {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -106,22 +103,6 @@ public abstract class User {
 
     public void setAccountCreationDate(LocalDateTime accountCreationDate) {
         this.accountCreationDate = accountCreationDate;
-    }
-
-    public boolean isAccountConfirmed() {
-        return accountConfirmed;
-    }
-
-    public void setAccountConfirmed(boolean accountConfirmed) {
-        this.accountConfirmed = accountConfirmed;
-    }
-
-    public String getConfirmationCode() {
-        return confirmationCode;
-    }
-
-    public void setConfirmationCode(String confirmationCode) {
-        this.confirmationCode = confirmationCode;
     }
 
     public String getBio() {

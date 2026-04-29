@@ -1,12 +1,16 @@
 package br.edu.ufscar.backend.mealsfinder.models.entity;
 
 import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
+import br.edu.ufscar.backend.mealsfinder.models.enums.EnvironmentTag;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentType;
+import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTag;
+import br.edu.ufscar.backend.mealsfinder.models.enums.ServiceTag;
 import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
 import br.edu.ufscar.backend.mealsfinder.models.states.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -50,29 +54,32 @@ public class Establishment extends User {
     @Embedded
     private Address address;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
             name = "establishment_food_tags",
-            joinColumns = @JoinColumn(name = "establishment_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_tag_id")
+            joinColumns = @JoinColumn(name = "establishment_id", nullable = false)
     )
-    private Set<FoodTag> foodTags;
+    @Column(name = "food_tag", nullable = false, length = 64)
+    @Enumerated(EnumType.STRING)
+    private Set<FoodTag> foodTags = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
             name = "establishment_service_tags",
-            joinColumns = @JoinColumn(name = "establishment_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_tag_id")
+            joinColumns = @JoinColumn(name = "establishment_id", nullable = false)
     )
-    private Set<ServiceTag> serviceTags;
+    @Column(name = "service_tag", nullable = false, length = 64)
+    @Enumerated(EnumType.STRING)
+    private Set<ServiceTag> serviceTags = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
             name = "establishment_environment_tags",
-            joinColumns = @JoinColumn(name = "establishment_id"),
-            inverseJoinColumns = @JoinColumn(name = "environment_tag_id")
+            joinColumns = @JoinColumn(name = "establishment_id", nullable = false)
     )
-    private Set<EnvironmentTag> environmentTags;
+    @Column(name = "environment_tag", nullable = false, length = 64)
+    @Enumerated(EnumType.STRING)
+    private Set<EnvironmentTag> environmentTags = new HashSet<>();
 
     public void handleAnalysis(AnalysisResult result) {
         this.state.handleAnalysis(this, result);

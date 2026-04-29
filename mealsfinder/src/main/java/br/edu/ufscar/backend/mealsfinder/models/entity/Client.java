@@ -1,7 +1,10 @@
 package br.edu.ufscar.backend.mealsfinder.models.entity;
 
+import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTag;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,21 +13,35 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Client extends User {
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
             name = "client_liked_food_tags",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_tag_id")
+            joinColumns = @JoinColumn(name = "client_id", nullable = false)
     )
-    private Set<FoodTag> likedFoodTags;
+    @Column(name = "food_tag", nullable = false, length = 64)
+    @Enumerated(EnumType.STRING)
+    private Set<FoodTag> likedFoodTags = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
             name = "client_disliked_food_tags",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_tag_id")
+            joinColumns = @JoinColumn(name = "client_id", nullable = false)
     )
-    private Set<FoodTag> dislikedFoodTags;
+    @Column(name = "food_tag", nullable = false, length = 64)
+    @Enumerated(EnumType.STRING)
+    private Set<FoodTag> dislikedFoodTags = new HashSet<>();
+
+    @Formula("(select coalesce((select count(*) from follows f where f.follower_id = id), 0))")
+    private long followingCount;
+
+    @Formula("(select coalesce((select count(*) from follows f2 where f2.following_id = id), 0))")
+    private long followedCount;
+
+    @Formula("(select coalesce((select count(*) from reviews r where r.user_id = id), 0))")
+    private long reviewsPostedCount;
+
+    @Formula("(select coalesce((select count(*) from saved_reviews s where s.user_id = id), 0))")
+    private long reviewsSavedCount;
 
     public Client() {
         super();
@@ -44,6 +61,22 @@ public class Client extends User {
 
     public void setDislikedFoodTags(Set<FoodTag> dislikedFoodTags) {
         this.dislikedFoodTags = dislikedFoodTags;
+    }
+
+    public long getFollowingCount() {
+        return followingCount;
+    }
+
+    public long getFollowedCount() {
+        return followedCount;
+    }
+
+    public long getReviewsPostedCount() {
+        return reviewsPostedCount;
+    }
+
+    public long getReviewsSavedCount() {
+        return reviewsSavedCount;
     }
 
     @Override

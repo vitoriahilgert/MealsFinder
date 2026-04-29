@@ -3,18 +3,22 @@ package br.edu.ufscar.backend.mealsfinder.models.states;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
 import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
 
-public class Accepted extends EstablishmentState {
-    private static final Accepted acceptedInstance = new Accepted();
+public final class Accepted implements EstablishmentState {
+
+    private static final Accepted INSTANCE = new Accepted();
 
     private Accepted() {
     }
 
     public static Accepted getInstance() {
-        return acceptedInstance;
+        return INSTANCE;
     }
 
     @Override
     public void handleAnalysis(Establishment establishment, AnalysisResult result) {
-        establishment.setVisible(true);
+        if (result == AnalysisResult.REJECTED) {
+            establishment.setVisible(false);
+            Pending.registerRejection(establishment);
+        }
     }
 }

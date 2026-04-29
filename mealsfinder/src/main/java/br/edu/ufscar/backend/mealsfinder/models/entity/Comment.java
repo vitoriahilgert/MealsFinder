@@ -1,6 +1,7 @@
 package br.edu.ufscar.backend.mealsfinder.models.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -15,8 +16,8 @@ public class Comment {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @JoinColumn(name = "review_id", nullable = false)
+    private Review review;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,6 +35,9 @@ public class Comment {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Formula("(select coalesce((select count(*) from comment_likes cl where cl.comment_id = id), 0))")
+    private long likesCount;
 
     public Comment() {
     }
@@ -53,12 +57,16 @@ public class Comment {
         this.id = id;
     }
 
-    public Post getPost() {
-        return post;
+    public Review getReview() {
+        return review;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public long getLikesCount() {
+        return likesCount;
     }
 
     public User getUser() {

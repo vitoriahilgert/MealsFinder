@@ -1,13 +1,16 @@
 package br.edu.ufscar.backend.mealsfinder.dtos.review;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import java.util.Set;
 
 public class CreateReviewRequestDTO {
     private String description;
 
-    private Set<String> foodTagIds;
-    private Set<String> serviceTagIds;
-    private Set<String> environmentTagIds;
+    private Set<String> foodTags;
+    private Set<String> serviceTags;
+    private Set<String> environmentTags;
+
     private String establishmentId;
     private String clientId;
     private Double priceRate;
@@ -28,34 +31,35 @@ public class CreateReviewRequestDTO {
         this.description = description;
     }
 
-    public Set<String> getFoodTagIds() {
-        return foodTagIds;
+    public Set<String> getFoodTags() {
+        return foodTags;
     }
 
-    public void setFoodTagIds(Set<String> foodTagIds) {
-        this.foodTagIds = foodTagIds;
+    public void setFoodTags(Set<String> foodTags) {
+        this.foodTags = foodTags;
     }
 
-    public Set<String> getServiceTagIds() {
-        return serviceTagIds;
+    public Set<String> getServiceTags() {
+        return serviceTags;
     }
 
-    public void setServiceTagIds(Set<String> serviceTagIds) {
-        this.serviceTagIds = serviceTagIds;
+    public void setServiceTags(Set<String> serviceTags) {
+        this.serviceTags = serviceTags;
     }
 
-    public Set<String> getEnvironmentTagIds() {
-        return environmentTagIds;
+    public Set<String> getEnvironmentTags() {
+        return environmentTags;
     }
 
-    public void setEnvironmentTagIds(Set<String> environmentTagIds) {
-        this.environmentTagIds = environmentTagIds;
+    public void setEnvironmentTags(Set<String> environmentTags) {
+        this.environmentTags = environmentTags;
     }
 
     public String getEstablishmentId() {
         return establishmentId;
     }
 
+    @JsonAlias("reviewedEstablishmentId")
     public void setEstablishmentId(String establishmentId) {
         this.establishmentId = establishmentId;
     }
@@ -112,6 +116,7 @@ public class CreateReviewRequestDTO {
         return clientId;
     }
 
+    @JsonAlias("userId")
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }

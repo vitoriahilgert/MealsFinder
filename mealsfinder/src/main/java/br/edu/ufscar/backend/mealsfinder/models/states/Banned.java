@@ -3,18 +3,19 @@ package br.edu.ufscar.backend.mealsfinder.models.states;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
 import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
 
-public class Banned extends EstablishmentState {
-    private static final Banned bannedInstance = new Banned();
+public final class Banned implements EstablishmentState {
+
+    private static final Banned INSTANCE = new Banned();
 
     private Banned() {
     }
 
     public static Banned getInstance() {
-        return bannedInstance;
+        return INSTANCE;
     }
 
     @Override
     public void handleAnalysis(Establishment establishment, AnalysisResult result) {
-
+        // Estado final: análises não alteram o cadastro.
     }
 }

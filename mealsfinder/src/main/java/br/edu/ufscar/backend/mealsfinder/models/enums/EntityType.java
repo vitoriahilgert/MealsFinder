@@ -1,9 +1,8 @@
 package br.edu.ufscar.backend.mealsfinder.models.enums;
 
 public enum EntityType {
-    POST,
+    REVIEW,
     COMMENT,
     USER,
-    ESTABLISHMENT,
-    REVIEW
+    ESTABLISHMENT
 }

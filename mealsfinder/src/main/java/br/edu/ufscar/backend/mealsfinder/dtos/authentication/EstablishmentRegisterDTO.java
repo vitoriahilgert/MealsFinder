@@ -1,9 +1,16 @@
 package br.edu.ufscar.backend.mealsfinder.dtos.authentication;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import br.edu.ufscar.backend.mealsfinder.dtos.common.AddressDTO;
+import br.edu.ufscar.backend.mealsfinder.models.enums.EnvironmentTag;
 import br.edu.ufscar.backend.mealsfinder.models.enums.EstablishmentType;
-import br.edu.ufscar.backend.mealsfinder.models.enums.StatusEnum;
+import br.edu.ufscar.backend.mealsfinder.models.enums.FoodTag;
+import br.edu.ufscar.backend.mealsfinder.models.enums.ServiceTag;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EstablishmentRegisterDTO {
     private String cnpj;
@@ -15,13 +22,14 @@ public class EstablishmentRegisterDTO {
     private String profilePicUrl;
     private String bio;
     private EstablishmentType type;
-    private boolean isDelivery;
-    private boolean isInPerson;
-    private StatusEnum status;
-    private String address;
-    private List<String> menuUrls;
-    private List<String> establishmentPicturesUrls;
-    private int rejections;
+    private boolean delivery;
+    private boolean inPerson;
+    private AddressDTO address;
+    private Set<FoodTag> foodTags = new HashSet<>();
+    private Set<ServiceTag> serviceTags = new HashSet<>();
+    private Set<EnvironmentTag> environmentTags = new HashSet<>();
+    private List<String> menuUrls = new ArrayList<>();
+    private List<String> establishmentPicturesUrls = new ArrayList<>();
 
     public EstablishmentRegisterDTO() {
     }
@@ -58,6 +66,14 @@ public class EstablishmentRegisterDTO {
         this.username = username;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -91,35 +107,53 @@ public class EstablishmentRegisterDTO {
     }
 
     public boolean isDelivery() {
-        return isDelivery;
+        return delivery;
     }
 
+    @JsonAlias("isDelivery")
     public void setDelivery(boolean delivery) {
-        isDelivery = delivery;
+        this.delivery = delivery;
     }
 
     public boolean isInPerson() {
-        return isInPerson;
+        return inPerson;
     }
 
+    @JsonAlias({"isInPerson", "presencial"})
     public void setInPerson(boolean inPerson) {
-        isInPerson = inPerson;
+        this.inPerson = inPerson;
     }
 
-    public StatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEnum status) {
-        this.status = status;
-    }
-
-    public String getAddress() {
+    public AddressDTO getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(AddressDTO address) {
         this.address = address;
+    }
+
+    public Set<FoodTag> getFoodTags() {
+        return foodTags;
+    }
+
+    public void setFoodTags(Set<FoodTag> foodTags) {
+        this.foodTags = foodTags != null ? foodTags : new HashSet<>();
+    }
+
+    public Set<ServiceTag> getServiceTags() {
+        return serviceTags;
+    }
+
+    public void setServiceTags(Set<ServiceTag> serviceTags) {
+        this.serviceTags = serviceTags != null ? serviceTags : new HashSet<>();
+    }
+
+    public Set<EnvironmentTag> getEnvironmentTags() {
+        return environmentTags;
+    }
+
+    public void setEnvironmentTags(Set<EnvironmentTag> environmentTags) {
+        this.environmentTags = environmentTags != null ? environmentTags : new HashSet<>();
     }
 
     public List<String> getMenuUrls() {
@@ -127,7 +161,7 @@ public class EstablishmentRegisterDTO {
     }
 
     public void setMenuUrls(List<String> menuUrls) {
-        this.menuUrls = menuUrls;
+        this.menuUrls = menuUrls != null ? menuUrls : new ArrayList<>();
     }
 
     public List<String> getEstablishmentPicturesUrls() {
@@ -135,22 +169,6 @@ public class EstablishmentRegisterDTO {
     }
 
     public void setEstablishmentPicturesUrls(List<String> establishmentPicturesUrls) {
-        this.establishmentPicturesUrls = establishmentPicturesUrls;
-    }
-
-    public int getRejections() {
-        return rejections;
-    }
-
-    public void setRejections(int rejections) {
-        this.rejections = rejections;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.establishmentPicturesUrls = establishmentPicturesUrls != null ? establishmentPicturesUrls : new ArrayList<>();
     }
 }

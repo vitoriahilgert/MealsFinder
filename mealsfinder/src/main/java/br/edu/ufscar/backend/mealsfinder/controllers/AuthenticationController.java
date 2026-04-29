@@ -3,13 +3,13 @@ package br.edu.ufscar.backend.mealsfinder.controllers;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.ClientRegisterDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.CredentialsDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.authentication.EstablishmentRegisterDTO;
+import br.edu.ufscar.backend.mealsfinder.dtos.authentication.LoginResponseDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.client.ClientResponseDTO;
 import br.edu.ufscar.backend.mealsfinder.dtos.establishment.EstablishmentResponseDTO;
+import br.edu.ufscar.backend.mealsfinder.models.entity.Client;
 import br.edu.ufscar.backend.mealsfinder.models.entity.Establishment;
-import br.edu.ufscar.backend.mealsfinder.models.entity.User;
-import br.edu.ufscar.backend.mealsfinder.services.authentication.LoginService;
-import br.edu.ufscar.backend.mealsfinder.services.authentication.RegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.edu.ufscar.backend.mealsfinder.services.LoginService;
+import br.edu.ufscar.backend.mealsfinder.services.RegistrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,22 +28,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody CredentialsDTO credentials) {
-        User authenticatedUser = loginService.login(credentials);
-        return ResponseEntity.ok(authenticatedUser);
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody CredentialsDTO credentials) {
+        return ResponseEntity.ok(loginService.login(credentials));
     }
 
     @PostMapping("/register/client")
     public ResponseEntity<ClientResponseDTO> registerClient(@RequestBody ClientRegisterDTO dto) {
-        User user = registrationService.registerClient(dto);
-        return ResponseEntity.ok(new ClientResponseDTO(user));
+        Client client = registrationService.registerClient(dto);
+        return ResponseEntity.ok(new ClientResponseDTO(client));
     }
 
     @PostMapping("/register/establishment")
     public ResponseEntity<EstablishmentResponseDTO> registerEstablishment(@RequestBody EstablishmentRegisterDTO dto) {
-        User user = registrationService.registerEstablishment(dto);
-
-        return ResponseEntity.ok(new EstablishmentResponseDTO((Establishment) user));
+        Establishment establishment = registrationService.registerEstablishment(dto);
+        return ResponseEntity.ok(new EstablishmentResponseDTO(establishment));
     }
 }
 

@@ -5,29 +5,35 @@ import br.edu.ufscar.backend.mealsfinder.models.enums.AnalysisResult;
 
 import java.time.LocalDate;
 
-public class Pending extends EstablishmentState{
-    private static final Pending pendingInstance = new Pending();
+public final class Pending implements EstablishmentState {
+
+    private static final Pending INSTANCE = new Pending();
 
     private Pending() {
     }
 
     public static Pending getInstance() {
-        return pendingInstance;
+        return INSTANCE;
     }
 
     @Override
     public void handleAnalysis(Establishment establishment, AnalysisResult result) {
-        switch (result) {
-            case ACCEPTED:
-                System.out.println("Resultado da análise: Aprovado! Trocando de estado...");
-                establishment.setVisible(true);
-                establishment.setState(Accepted.getInstance());
-                break;
-            case REJECTED:
-                System.out.println("Resultado da análise: Rejeitado! Trocando de estado...");
-                establishment.setRejectionDate(LocalDate.now());
-                establishment.setState(Rejected.getInstance());
-                break;
+        if (result == AnalysisResult.ACCEPTED) {
+            establishment.setVisible(true);
+            establishment.setState(Accepted.getInstance());
+        } else {
+            registerRejection(establishment);
+        }
+    }
+
+    static void registerRejection(Establishment establishment) {
+        int next = establishment.getRejectionsCount() + 1;
+        establishment.setRejectionsCount(next);
+        establishment.setRejectionDate(LocalDate.now());
+        if (next >= 2) {
+            establishment.setState(Banned.getInstance());
+        } else {
+            establishment.setState(Rejected.getInstance());
         }
     }
 }
